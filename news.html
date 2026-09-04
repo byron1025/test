@@ -9,14 +9,14 @@
     body { font-family: 'PingFang TC', 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
     .container { max-width: 1100px; margin: 0 auto; padding: 20px 40px; }
     
-    /* 導航列 */
+    /* 導航列 Header Navigation */
     .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid #e2e8f0; }
     .logo { font-size: 1.5rem; font-weight: 800; color: #0284c7; text-decoration: none; }
     .logo span { color: #10b981; }
     .nav-links a { color: #64748b; text-decoration: none; margin-left: 20px; font-weight: 600; transition: 0.3s; }
     .nav-links a:hover, .nav-links a.active { color: #0284c7; border-bottom: 3px solid #f59e0b; padding-bottom: 5px; }
     
-    /* 最新消息列表區塊 */
+    /* 最新消息列表 Latest News Section */
     .news-section { max-width: 750px; margin: 40px auto; }
     .loading-spinner { text-align: center; color: #0284c7; font-weight: bold; font-size: 1.1rem; padding: 40px 0; }
     
@@ -49,6 +49,7 @@
 </head>
 <body>
   <div class="container">
+    <!-- Top Navigation Bar -->
     <nav class="nav">
       <a href="index.html" class="logo">🚲 富國<span>腳踏車店</span></a>
       <div class="nav-links">
@@ -60,6 +61,7 @@
       </div>
     </nav>
 
+    <!-- News List Section -->
     <div class="news-section">
       <h2 style="text-align: center; color: #0284c7; font-size: 1.8rem; margin-bottom: 10px;">📢 最新消息與即時公告</h2>
       <p style="text-align: center; color: #64748b; margin-bottom: 30px;">掌握富國腳踏車店最新優惠活動、新車到貨與營業時間調整。</p>
@@ -71,55 +73,51 @@
     <footer class="footer">© 2026 富國腳踏車店 All Rights Reserved.</footer>
   </div>
 
-<script>
+  <script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw4iMBFMfJJLF44WlzqqQK7mgKRIvh5vivMLrRkEHv4sJ9IL7FaxB6CpJUmbNNItm4x1/exec";
 
-    async function fetchNews() {
-      try {
-        // 加入 redirect: 'follow' 處理 Google 轉址問題
-        const response = await fetch(GAS_API_URL, { redirect: 'follow' });
-        
-        if (!response.ok) {
-          throw new Error('網路回應不成功: ' + response.status);
-        }
+    // JSONP Callback Handler
+    function renderNews(data) {
+      document.getElementById('loading').style.display = 'none';
+      const newsContainer = document.getElementById('news-list');
 
-        const data = await response.json();
-        
-        document.getElementById('loading').style.display = 'none';
-        const newsContainer = document.getElementById('news-list');
-
-        if (!data || data.length === 0) {
-          newsContainer.innerHTML = '<p style="text-align:center; color:#94a3b8;">目前尚無公告消息。</p>';
-          return;
-        }
-
-        // 將資料倒序排列（最新的在最上面）
-        data.reverse().forEach(item => {
-          // 格式化日期顯示
-          let formattedDate = item.日期 || '';
-          if (formattedDate) {
-            const d = new Date(formattedDate);
-            if (!isNaN(d.getTime())) {
-              formattedDate = d.toISOString().split('T')[0];
-            }
-          }
-          
-          const card = document.createElement('div');
-          card.className = 'news-card';
-          card.innerHTML = `
-            <div class="news-meta">
-              <span class="news-tag">${item.標籤 || '最新公告'}</span>
-              <span class="news-date">📅 ${formattedDate}</span>
-            </div>
-            <div class="news-title">${item.標題 || ''}</div>
-            <div class="news-content">${item.內容 || ''}</div>
-          `;
-          newsContainer.appendChild(card);
-        });
-      } catch (error) {
-        console.error('抓取資料失敗：', error);
-        document.getElementById('loading').innerHTML = '❌ 最新消息載入失敗，請確認 Apps Script 部署設定或稍後再試。';
+      if (!data || data.length === 0) {
+        newsContainer.innerHTML = '<p style="text-align:center; color:#94a3b8;">目前尚無公告消息。</p>';
+        return;
       }
+
+      // Display most recent announcements first
+      data.reverse().forEach(item => {
+        let formattedDate = item.日期 || '';
+        if (formattedDate) {
+          const d = new Date(formattedDate);
+          if (!isNaN(d.getTime())) {
+            formattedDate = d.toISOString().split('T')[0];
+          }
+        }
+
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        card.innerHTML = `
+          <div class="news-meta">
+            <span class="news-tag">${item.標籤 || '最新公告'}</span>
+            <span class="news-date">📅 ${formattedDate}</span>
+          </div>
+          <div class="news-title">${item.標題 || ''}</div>
+          <div class="news-content">${item.內容 || ''}</div>
+        `;
+        newsContainer.appendChild(card);
+      });
+    }
+
+    // Fetch data using script tag (JSONP cross-origin request)
+    function fetchNews() {
+      const script = document.createElement('script');
+      script.src = `${GAS_API_URL}?callback=renderNews`;
+      script.onerror = function() {
+        document.getElementById('loading').innerHTML = '❌ 最新消息載入失敗，請確認 Apps Script 部署設定或稍後再試。';
+      };
+      document.body.appendChild(script);
     }
 
     fetchNews();
