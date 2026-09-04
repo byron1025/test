@@ -71,12 +71,18 @@
     <footer class="footer">© 2026 富國腳踏車店 All Rights Reserved.</footer>
   </div>
 
-  <script>
+<script>
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbw4iMBFMfJJLF44WlzqqQK7mgKRIvh5vivMLrRkEHv4sJ9IL7FaxB6CpJUmbNNItm4x1/exec";
 
     async function fetchNews() {
       try {
-        const response = await fetch(GAS_API_URL);
+        // 加入 redirect: 'follow' 處理 Google 轉址問題
+        const response = await fetch(GAS_API_URL, { redirect: 'follow' });
+        
+        if (!response.ok) {
+          throw new Error('網路回應不成功: ' + response.status);
+        }
+
         const data = await response.json();
         
         document.getElementById('loading').style.display = 'none';
@@ -87,8 +93,16 @@
           return;
         }
 
+        // 將資料倒序排列（最新的在最上面）
         data.reverse().forEach(item => {
-          const formattedDate = item.日期 ? new Date(item.日期).toISOString().split('T')[0] : '';
+          // 格式化日期顯示
+          let formattedDate = item.日期 || '';
+          if (formattedDate) {
+            const d = new Date(formattedDate);
+            if (!isNaN(d.getTime())) {
+              formattedDate = d.toISOString().split('T')[0];
+            }
+          }
           
           const card = document.createElement('div');
           card.className = 'news-card';
@@ -104,7 +118,7 @@
         });
       } catch (error) {
         console.error('抓取資料失敗：', error);
-        document.getElementById('loading').innerHTML = '❌ 最新消息載入失敗，請稍後再試。';
+        document.getElementById('loading').innerHTML = '❌ 最新消息載入失敗，請確認 Apps Script 部署設定或稍後再試。';
       }
     }
 
