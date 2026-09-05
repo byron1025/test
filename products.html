@@ -25,7 +25,7 @@
       <button class="filter-btn" data-category="電輔車">電輔車</button>
     </div>
 
-    <!-- 車款列表區塊（透過 JS 動態讀取 JSON 渲染） -->
+    <!-- 車款列表區塊（透過 JS 動態讀取 product.json 渲染） -->
     <div class="product-grid" id="product-container">
       <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
         🔄 正在載入車款資料...
@@ -36,7 +36,7 @@
   <!-- 全站統一 Header/Footer 動態載入腳本 -->
   <script src="./js/header.js"></script>
 
-  <!-- 動態讀取 site-data.json & 分類篩選腳本 -->
+  <!-- 動態讀取 product.json & 分類篩選腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const productContainer = document.getElementById('product-container');
@@ -97,14 +97,14 @@
         });
       }
 
-      // 抓取 ./data/site-data.json
-      fetch('./data/site-data.json?t=' + Date.now())
+      // 🎯 抓取 product.json (路徑改為 ./data/product.json)
+      // 💡 備註：如果您的 product.json 是直接放在跟 html 同一層，請把路徑改成 './product.json'
+      fetch('./data/product.json?t=' + Date.now())
         .then(res => {
           if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
           return res.json();
         })
         .then(data => {
-          // 自動相容解析：支援 陣列、data.products、data.bikes、data.items
           let list = [];
           if (Array.isArray(data)) {
             list = data;
@@ -115,15 +115,15 @@
           if (list.length > 0) {
             setupFilter(list);
           } else {
-            productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">JSON 檔案讀取成功，但裡面沒有找到車款資料陣列。</div>';
+            productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">product.json 讀取成功，但裡面沒有找到車款資料。</div>';
           }
         })
         .catch(err => {
-          console.error("data/site-data.json 讀取失敗:", err);
+          console.error("product.json 讀取失敗:", err);
           productContainer.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">
-              <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem;">⚠️ 無法載入車款資料</p>
-              <p style="font-size: 0.9rem; color: #64748b;">請確認專案資料夾中是否有 <code>data/site-data.json</code> 檔案，且格式符合標準 JSON 規範。</p>
+              <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem;">⚠️ 無法載入 product.json</p>
+              <p style="font-size: 0.9rem; color: #64748b;">請確認 <code>product.json</code> 檔案是否放在 <code>data</code> 資料夾中。</p>
             </div>
           `;
         });
