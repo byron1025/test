@@ -2,98 +2,75 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
+  <!-- 關鍵 RWD Viewport 宣告，允許手機與平板自由縮放 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 車款與商品目錄</title>
-  <!-- ⚠️ 修復 1：改為單點 ./css/style.css -->
+  <title>富國腳踏車店 - 車款目錄</title>
+  
+  <!-- 載入通用 CSS 樣式表 -->
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 
   <main class="container">
-    <div style="text-align: center; margin-bottom: 2rem;">
-      <h1 style="color: #0f172a; font-size: 2rem;">精選車款與目錄</h1>
-      <p style="color: #64748b; margin-top: 0.5rem;">歡迎親臨門市試乘與諮詢</p>
+    <h1 class="page-title">🚴‍♂️ <span>精選車款與目錄</span></h1>
+    <p class="page-subtitle">歡迎親臨門市試乘與諮詢，我們提供最專業的選車與調整服務</p>
+
+    <!-- 分類篩選按鈕區 -->
+    <div class="filter-group">
+      <button class="filter-btn active">全部車種</button>
+      <button class="filter-btn">公路車</button>
+      <button class="filter-btn">登山車</button>
+      <button class="filter-btn">通勤車</button>
+      <button class="filter-btn">電輔車</button>
     </div>
 
-    <!-- 分類篩選按鈕列 -->
-    <div class="filter-container">
-      <button class="filter-btn active" onclick="filterProducts('all', this)">全部車種</button>
-      <button class="filter-btn" onclick="filterProducts('road', this)">公路車</button>
-      <button class="filter-btn" onclick="filterProducts('mountain', this)">登山車</button>
-      <button class="filter-btn" onclick="filterProducts('city', this)">通勤車</button>
-      <button class="filter-btn" onclick="filterProducts('ebike', this)">電輔車</button>
-    </div>
+    <!-- 車款列表區塊 (支援完全 RWD 自適應縮放) -->
+    <div class="product-grid" id="product-container">
+      
+      <!-- 車款卡片 1 -->
+      <article class="card">
+        <div class="card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600" alt="Fuguo Speed 700C">
+        </div>
+        <div class="card-body">
+          <span class="tag">公路車</span>
+          <h3 class="card-title">Fuguo Speed 700C 輕量化公路車</h3>
+          <p class="card-desc">採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。</p>
+          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+        </div>
+      </article>
 
-    <!-- 商品列表容器 -->
-    <div id="product-list" class="product-grid">
-      <p style="text-align: center; grid-column: 1/-1;">車款載入中...</p>
+      <!-- 車款卡片 2 -->
+      <article class="card">
+        <div class="card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600" alt="Fuguo Mountain X2">
+        </div>
+        <div class="card-body">
+          <span class="tag">登山車</span>
+          <h3 class="card-title">Fuguo Mountain X2 雙碟煞登山車</h3>
+          <p class="card-desc">配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。</p>
+          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+        </div>
+      </article>
+
+      <!-- 車款卡片 3 -->
+      <article class="card">
+        <div class="card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600" alt="Fuguo City Classic">
+        </div>
+        <div class="card-body">
+          <span class="tag">通勤車</span>
+          <h3 class="card-title">Fuguo City Classic 復古通勤車</h3>
+          <p class="card-desc">附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。</p>
+          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+        </div>
+      </article>
+
     </div>
   </main>
 
-  <!-- ⚠️ 修復 2：選單 JS 改為單點 ./js/header.js -->
+  <!-- 全站統一 Header/Footer 動態載入腳本 -->
   <script src="./js/header.js"></script>
-
-  <!-- 頁面邏輯 -->
-  <script>
-    let allProducts = [];
-
-    // 載入商品 JSON
-    function loadProducts() {
-      // ⚠️ 修復 3：路徑修正為 ./data/products.json (去掉原本的 ../)
-      fetch('./data/products.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('HTTP 錯誤！狀態碼：' + response.status);
-          }
-          return response.json();
-        })
-        .then(data => {
-          allProducts = data;
-          renderProducts(allProducts);
-        })
-        .catch(err => {
-          console.error("載入車款資料失敗：", err);
-          document.getElementById('product-list').innerHTML = 
-            '<p style="color:red; text-align:center; grid-column: 1/-1;">❌ 無法載入車款資料，請確認 GitHub 上是否有建立 data/products.json 檔案。</p>';
-        });
-    }
-
-    // 渲染商品卡片
-    function renderProducts(products) {
-      const container = document.getElementById('product-list');
-      if (!products || products.length === 0) {
-        container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">目前該分類尚無車款。</p>';
-        return;
-      }
-
-      container.innerHTML = products.map(item => `
-        <div class="product-card">
-          <img src="${item.image}" alt="${item.name}" class="product-img" loading="lazy">
-          <div class="product-body">
-            <span class="product-tag">${item.categoryName || ''}</span>
-            <h3 style="font-size: 1.1rem; color: #0f172a; margin-bottom: 6px;">${item.name || ''}</h3>
-            <p style="font-size: 0.875rem; color: #64748b; flex-grow: 1;">${item.desc || ''}</p>
-            <div class="product-price">${item.price || ''}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // 分類篩選功能
-    function filterProducts(category, btnElement) {
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      if (btnElement) btnElement.classList.add('active');
-
-      if (category === 'all') {
-        renderProducts(allProducts);
-      } else {
-        const filtered = allProducts.filter(item => item.category === category);
-        renderProducts(filtered);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", loadProducts);
-  </script>
 
 </body>
 </html>
