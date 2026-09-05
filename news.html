@@ -1,126 +1,43 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 最新消息</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'PingFang TC', 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; line-height: 1.6; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 20px 40px; }
-    
-    /* 導航列 Header Navigation */
-    .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 2px solid #e2e8f0; }
-    .logo { font-size: 1.5rem; font-weight: 800; color: #0284c7; text-decoration: none; }
-    .logo span { color: #10b981; }
-    .nav-links a { color: #64748b; text-decoration: none; margin-left: 20px; font-weight: 600; transition: 0.3s; }
-    .nav-links a:hover, .nav-links a.active { color: #0284c7; border-bottom: 3px solid #f59e0b; padding-bottom: 5px; }
-    
-    /* 最新消息列表 Latest News Section */
-    .news-section { max-width: 750px; margin: 40px auto; }
-    .loading-spinner { text-align: center; color: #0284c7; font-weight: bold; font-size: 1.1rem; padding: 40px 0; }
-    
-    .news-card {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
-      transition: all 0.3s ease;
-    }
-    .news-card:hover { transform: translateY(-3px); border-color: #10b981; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
-    .news-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-    .news-tag {
-      background: #fef3c7;
-      color: #d97706;
-      border: 1px solid #fde68a;
-      padding: 3px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .news-date { font-size: 0.85rem; color: #94a3b8; font-weight: 600; }
-    .news-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
-    .news-content { font-size: 0.95rem; color: #475569; line-height: 1.7; white-space: pre-line; }
+<!-- 1. 確定 HTML 頁面中有這個容器 -->
+<div id="news-container">⏳ 最新消息載入中...</div>
 
-    .footer { border-top: 2px solid #e2e8f0; padding-top: 20px; text-align: center; color: #94a3b8; font-size: 0.85rem; margin-top: 60px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- Top Navigation Bar -->
-    <nav class="nav">
-      <a href="index.html" class="logo">🚲 富國<span>腳踏車店</span></a>
-      <div class="nav-links">
-        <a href="index.html">關於我們</a>
-        <a href="news.html" class="active">最新消息</a>
-        <a href="services.html">服務與試算</a>
-        <a href="products.html">精選車款</a>
-        <a href="contact.html">門市資訊</a>
-      </div>
-    </nav>
+<!-- 2. 在頁面底部加上 JavaScript -->
+<script>
+  // ⚠️ 請把下方網址替換為您第一步複製的 GAS 網址 (結尾必須是 /exec)
+  const GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-    <!-- News List Section -->
-    <div class="news-section">
-      <h2 style="text-align: center; color: #0284c7; font-size: 1.8rem; margin-bottom: 10px;">📢 最新消息與即時公告</h2>
-      <p style="text-align: center; color: #64748b; margin-bottom: 30px;">掌握富國腳踏車店最新優惠活動、新車到貨與營業時間調整。</p>
-      
-      <div id="loading" class="loading-spinner">🔄 即時連線載入最新消息中...</div>
-      <div id="news-list"></div>
-    </div>
-
-    <footer class="footer">© 2026 富國腳踏車店 All Rights Reserved.</footer>
-  </div>
-
- <script>
-  // ⚠️ 請確保網址結尾是 /exec，且開頭是 https://
-  const GAS_NEWS_URL = "https://script.google.com/macros/s/AKfycbw_PdvMTRpEQIUXxgILhVvA2hiLQmpdFPmj7yEINoTPkfzG6PkHVsVVy85k-QsZj9rv/exec";
-
-  function loadNews() {
+  // 這是一個全域回調函數，當 JSONP 抓完資料時會自動執行
+  function handleNewsData(data) {
     const container = document.getElementById('news-container');
-    if (container) container.innerText = "⏳ 最新消息載入中...";
+    if (!container) return;
 
-    // 關鍵修正：加上 redirect: 'follow' 讓手機瀏覽器允許 Google 的轉址
-    fetch(GAS_NEWS_URL, {
-      method: 'GET',
-      redirect: 'follow'
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('網路回應不成功');
-      }
-      return response.json();
-    })
-    .then(data => {
-      renderNews(data);
-    })
-    .catch(error => {
-      console.error("手機抓取失敗原因：", error);
-      if (container) {
-        container.innerHTML = `<p style="color:red;">❌ 資料載入失敗，請重新整理頁面。<br><small>(${error.message})</small></p>`;
-      }
-    });
-  }
-
-  function renderNews(items) {
-    const container = document.getElementById('news-container');
-    if (!items || items.length === 0) {
-      container.innerHTML = "<p>目前尚無最新消息。</p>";
+    if (!data || data.length === 0) {
+      container.innerHTML = "<p style='text-align:center;'>目前尚無最新消息。</p>";
       return;
     }
 
-    container.innerHTML = items.map(item => `
-      <div class="news-card" style="border-bottom: 1px solid #e2e8f0; padding: 15px 0;">
-        <span class="news-date" style="color: #0284c7; font-weight: bold;">${item.date || ''}</span>
-        <h3 class="news-title" style="margin: 5px 0;">${item.title || ''}</h3>
-        <p class="news-content" style="color: #475569; margin: 0;">${item.content || ''}</p>
+    container.innerHTML = data.map(item => `
+      <div class="news-card" style="border-bottom: 1px solid #e2e8f0; padding: 15px 0; margin-bottom: 10px;">
+        <span style="color: #0284c7; font-weight: bold; display: block;">${item.date || ''}</span>
+        <h3 style="margin: 5px 0; font-size: 1.2rem; color: #1e293b;">${item.title || ''}</h3>
+        <p style="color: #475569; margin: 0; line-height: 1.5;">${item.content || ''}</p>
       </div>
     `).join('');
   }
 
-  // 頁面載入完成後執行
-  document.addEventListener("DOMContentLoaded", loadNews);
+  // 利用動態插入 <script> 標籤呼叫 API，徹底避開跨網域 (CORS) 阻擋
+  function fetchNewsWithJSONP() {
+    const script = document.createElement('script');
+    script.src = `${GAS_URL}?callback=handleNewsData`;
+    script.onerror = function() {
+      const container = document.getElementById('news-container');
+      if (container) {
+        container.innerHTML = "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請檢查網路連線或 GAS 網址。</p>";
+      }
+    };
+    document.body.appendChild(script);
+  }
+
+  // 當網頁載入完成後執行
+  document.addEventListener("DOMContentLoaded", fetchNewsWithJSONP);
 </script>
-</body>
-</html>
