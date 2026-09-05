@@ -4,21 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>富國腳踏車店 - 門市與維修預約</title>
-  
-  <!-- 內嵌 CSS 樣式，確保頁面完美顯示 -->
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; color: #334155; line-height: 1.6; }
     .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; }
-    
-    /* 導覽列與頁尾樣式 */
     header { background-color: #0f172a; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
     header a { color: white; text-decoration: none; font-weight: bold; }
     nav a { margin-left: 1.5rem; color: #cbd5e1; text-decoration: none; }
     nav a:hover { color: white; }
     footer { text-align: center; padding: 2rem; background: #0f172a; color: #94a3b8; margin-top: 3rem; }
-
-    /* 雙欄卡片版面 */
     .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
     .card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; }
   </style>
@@ -40,32 +34,69 @@
       <!-- 線上預約表單卡片 -->
       <div class="card">
         <h3 style="color: #0284c7; margin-bottom: 1rem; font-size: 1.25rem;">線上預約維修 / 保養</h3>
-        <form onsubmit="alert('預約成功！我們將會盡快與您聯繫。'); return false;">
+        <form id="booking-form" onsubmit="submitBooking(event)">
           <div style="margin-bottom: 12px;">
             <label style="display:block; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500;">姓名</label>
-            <input type="text" placeholder="請輸入姓名" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+            <input type="text" id="name" placeholder="請輸入姓名" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
           </div>
           <div style="margin-bottom: 12px;">
             <label style="display:block; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500;">電話</label>
-            <input type="tel" placeholder="請輸入聯絡電話" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+            <input type="tel" id="phone" placeholder="請輸入聯絡電話" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
           </div>
           <div style="margin-bottom: 18px;">
             <label style="display:block; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500;">預約項目</label>
-            <select style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
+            <select id="service" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
               <option>全車定期保養</option>
               <option>煞車 / 變速系統微調</option>
               <option>外胎更換 / 補胎</option>
               <option>新車試乘與諮詢</option>
             </select>
           </div>
-          <button type="submit" style="width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">確認送出預約</button>
+          <button type="submit" id="submit-btn" style="width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">確認送出預約</button>
         </form>
       </div>
     </div>
   </main>
 
-  <!-- 自動動態插入頂部選單與頁尾 -->
   <script src="./js/header.js"></script>
+
+  <script>
+    // ⚠️ 請填入步驟 1 取得的 Google Apps Script Web App 網址
+    const GAS_BOOKING_URL = "https://script.google.com/macros/s/AKfycbwtysuT5c0Uo03LhXuApFwxvQjh5OARrDy0AfWoVYd2y_Lec7AIlEraRIBJXpRyapRCjA/exec";
+
+    function submitBooking(event) {
+      event.preventDefault();
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = "資料傳送中...";
+
+      const payload = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        service: document.getElementById('service').value
+      };
+
+      fetch(GAS_BOOKING_URL, {
+        method: 'POST',
+        mode: 'no-cors', // 避免跨域阻擋
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        alert('🎉 預約資料已成功送出！我們將會盡快與您聯繫。');
+        document.getElementById('booking-form').reset();
+      })
+      .catch(err => {
+        alert('❌ 傳送失敗，請直接來電預約。');
+        console.error(err);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = "確認送出預約";
+      });
+    }
+  </script>
 
 </body>
 </html>
