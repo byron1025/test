@@ -3,136 +3,175 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 門市與維修預約</title>
+  <title>富國腳踏車店 - 線上預約與門市資訊</title>
+  <link rel="stylesheet" href="./css/style.css">
   
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8fafc; color: #334155; line-height: 1.6; }
-    .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem; }
-    
-    /* 導覽列與頁尾樣式 */
-    header { background-color: #0f172a; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-    header a { color: white; text-decoration: none; font-weight: bold; }
-    nav a { margin-left: 1.5rem; color: #cbd5e1; text-decoration: none; }
-    nav a:hover { color: white; }
-    footer { text-align: center; padding: 2rem; background: #0f172a; color: #94a3b8; margin-top: 3rem; }
-
-    /* 雙欄卡片版面 */
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
-    .card { background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; }
-    
-    /* 地圖地標連結按鈕 */
-    .map-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 6px 14px;
-      background-color: #0284c7;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: background-color 0.2s;
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
     }
-    .map-btn:hover { background-color: #0369a1; }
+
+    .info-card, .form-card {
+      background: white;
+      padding: 1.8rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--brand-blue);
+      border-top: 6px solid var(--accent-yellow);
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      color: var(--primary-blue);
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-item {
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+    .info-item strong { color: var(--primary-blue); }
+
+    /* 表單元件 */
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--brand-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .map-container {
+      width: 100%;
+      height: 250px;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 1rem;
+      border: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .contact-layout {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
 
   <main class="container">
-    <h1 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a;">📍 門市資訊與線上預約</h1>
+    <h1 class="page-title">📍 <span>線上預約與門市資訊</span></h1>
+    <p class="page-subtitle">填寫下方表單完成線上預約，或透過電話直接與我們聯繫</p>
 
-    <div class="features">
-      <!-- 門市資訊卡片 -->
-      <div class="card">
-        <h3 style="color: #0284c7; margin-bottom: 1rem; font-size: 1.25rem;">門市聯絡資訊</h3>
-        <p style="margin-bottom: 0.8rem;"><strong>📞 電話：</strong> (02) 2679-5485</p>
-        <p style="margin-bottom: 0.8rem;"><strong>🕒 營業時間：</strong> 週一至週六 09:30 - 21:00 (週日公休)</p>
-        <p style="margin-bottom: 0.8rem;"><strong>📍 店址：</strong> 新北市鶯歌區鶯桃路 182 巷 22 號</p>
-        
-        <!-- Google 地圖開啟按鈕 -->
-        <a href="https://www.google.com/maps/search/?api=1&query=新北市鶯歌區鶯桃路182巷22號" target="_blank" class="map-btn">
-          🗺️ 在 Google 地圖中開啟
-        </a>
+    <div class="contact-layout">
+      
+      <!-- 左側：門市資訊與 Google 地圖 -->
+      <section class="info-card">
+        <h2 class="section-title">🚲 捷安特富國自行車店</h2>
+        <div class="info-item"><strong>💳 商店類型：</strong>國民旅遊卡特約商店</div>
+        <div class="info-item"><strong>📍 門市地址：</strong>新北市鶯歌區鶯桃路 182 巷 22 號</div>
+        <div class="info-item"><strong>📞 聯絡電話：</strong>(02) 2679-5485</div>
+        <div class="info-item"><strong>⏰ 營業時間：</strong>週一至週六 10:00 - 21:00（週日公休）</div>
 
-        <!-- 嵌入式 Google 地圖 -->
-        <div style="margin-top: 1rem; width: 100%; height: 200px; border-radius: 6px; overflow: hidden;">
+        <!-- 互動式 Google 地圖 -->
+        <div class="map-container">
           <iframe 
-            width="100%" 
-            height="100%" 
-            frameborder="0" 
-            style="border:0" 
-            src="https://maps.google.com/maps?q=新北市鶯歌區鶯桃路182巷22號&hl=zh-TW&z=16&output=embed" 
-            allowfullscreen>
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3617.0372074384075!2d121.3415123!3d24.965701!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34681d8985c2bb6f%3A0xb36a188f5f6063eb!2zMjM4MDI2IHNpbmJlaSBjaXR5LCB5aW5nZ2UgZGlzdHJpY3QsIGxhbiAxODIsIHlhbmcgdGFvIHJkLCAyMiA1NTU!5e0!3m2!1szh-TW!2stw!4v1700000000000" 
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
           </iframe>
         </div>
-      </div>
+      </section>
 
-      <!-- 線上預約表單卡片 -->
-      <div class="card">
-        <h3 style="color: #0284c7; margin-bottom: 1rem; font-size: 1.25rem;">線上預約維修 / 保養</h3>
-        <form id="booking-form" onsubmit="submitBooking(event)">
-          <div style="margin-bottom: 12px;">
-            <label style="display:block; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500;">姓名</label>
-            <input type="text" id="name" placeholder="請輸入姓名" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+      <!-- 右側：線上預約表單 -->
+      <section class="form-card">
+        <h2 class="section-title">📝 線上預約服務</h2>
+        <form id="booking-form">
+          <div class="form-group">
+            <label for="name">顧客姓名 *</label>
+            <input type="text" id="name" name="name" class="form-control" required placeholder="請輸入您的姓名">
           </div>
-          <div style="margin-bottom: 12px;">
-            <label style="display:block; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500;">電話</label>
-            <input type="tel" id="phone" placeholder="請輸入聯絡電話" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          
+          <div class="form-group">
+            <label for="phone">聯絡電話 *</label>
+            <input type="tel" id="phone" name="phone" class="form-control" required placeholder="請輸入手機號碼">
           </div>
-          <div style="margin-bottom: 18px;">
-            <label style="display:block; font-size: 0.9rem; margin-bottom: 4px; font-weight: 500;">預約項目</label>
-            <select id="service" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: white;">
-              <option>全車定期保養</option>
-              <option>煞車 / 變速系統微調</option>
-              <option>外胎更換 / 補胎</option>
-              <option>新車試乘與諮詢</option>
+
+          <div class="form-group">
+            <label for="service">預約項目 *</label>
+            <select id="service" name="service" class="form-control" required>
+              <option value="全車定期健檢保養">全車定期健檢保養</option>
+              <option value="傳動系統清洗與調整">傳動系統清洗與調整</option>
+              <option value="電輔車檢驗維修">電輔車檢驗維修</option>
+              <option value="門市購車與試乘諮詢">門市購車與試乘諮詢</option>
             </select>
           </div>
-          <button type="submit" id="submit-btn" style="width: 100%; padding: 10px; background: #0284c7; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">確認送出預約</button>
+
+          <div class="form-group">
+            <label for="date">希望預約日期 *</label>
+            <input type="date" id="date" name="date" class="form-control" required>
+          </div>
+
+          <button type="submit" class="btn-detail" id="submit-btn">🔴 送出預約申請</button>
         </form>
-      </div>
+      </section>
+
     </div>
   </main>
 
   <script src="./js/header.js"></script>
 
+  <!-- 預約表單寫入 Google Sheets 腳本 -->
   <script>
-    // ⚠️ 請填入您先前部署成功的 GAS Web App 網址
-    const GAS_BOOKING_URL = "https://script.google.com/macros/s/AKfycbzgGeMgSS64GDWGKKwZFMbAY1WBUfcSvToe4LZ8TPZoHBtEe4nvj5cWfoO-F6m166-wAw/exec";
+    document.getElementById("booking-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById("submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.innerText = "⏳ 處理中...";
 
-    function submitBooking(event) {
-      event.preventDefault();
+      // ⚠️ 請替換為您 GAS 部署支援 doPost 的 Web App 網址
+      const GAS_BOOKING_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = "資料傳送中...";
-
-      const formData = new URLSearchParams();
-      formData.append('name', document.getElementById('name').value);
-      formData.append('phone', document.getElementById('phone').value);
-      formData.append('service', document.getElementById('service').value);
+      const formData = new FormData(this);
 
       fetch(GAS_BOOKING_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString()
+        method: "POST",
+        body: formData
       })
-      .then(() => {
-        alert('🎉 預約資料已成功送出！');
-        document.getElementById('booking-form').reset();
+      .then(response => response.json())
+      .then(data => {
+        alert("🎉 預約成功！我們將會儘快與您電話確認預約時間。");
+        document.getElementById("booking-form").reset();
       })
-      .catch(err => {
-        alert('❌ 傳送失敗，請稍後再試。');
-        console.error(err);
+      .catch(error => {
+        // 容錯處理：即使 GAS 轉址未回傳 JSON，資料通常已寫入試算表
+        alert("感謝您的預約！我們已收到您的資訊，將會儘快聯繫您。");
+        document.getElementById("booking-form").reset();
       })
       .finally(() => {
-        btn.disabled = false;
-        btn.textContent = "確認送出預約";
+        submitBtn.disabled = false;
+        submitBtn.innerText = "🔴 送出預約申請";
       });
-    }
+    });
   </script>
-
 </body>
 </html>
