@@ -1,16 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const isSubFolder = window.location.pathname.includes("/pages/");
-  const basePath = isSubFolder ? "../" : "./";
-  const pagesPath = isSubFolder ? "./" : "./pages/";
-
   const headerHTML = `
     <header>
-      <a href="${basePath}index.html" class="logo" id="site-logo">富國腳踏車店</a>
+      <a href="./index.html" class="logo" id="site-logo">富國腳踏車店</a>
       <nav>
-        <a href="${basePath}index.html">首頁</a>
-        <a href="${pagesPath}news.html">最新消息</a>
-        <a href="${pagesPath}products.html">車款目錄</a>
-        <a href="${pagesPath}contact.html">門市預約</a>
+        <a href="./index.html">首頁</a>
+        <a href="./news.html">最新消息</a>
+        <a href="./products.html">車款目錄</a>
+        <a href="./contact.html">門市預約</a>
       </nav>
     </header>
   `;
