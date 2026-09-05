@@ -1,53 +1,178 @@
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const newsContainer = document.getElementById("news-container");
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <!-- 關鍵 1：RWD 縮放設定，確保手機與電腦皆能自適應顯示 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>富國腳踏車店 - 最新消息</title>
+  
+  <style>
+    /* 全局重置與三主色樣式 */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    // ⚠️ 請務必替換為您 GAS 管理部署後複製的 /exec 網址
-    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/execc";
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      background-color: #f8fafc; 
+      color: #1e293b; 
+      line-height: 1.6; 
+    }
     
-    // 自動加上時間戳記防止快存
-    const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
+    .container { 
+      width: 100%;
+      max-width: 900px; 
+      margin: 0 auto; 
+      padding: 1.5rem 1rem; 
+    }
+    
+    /* 標題 (深藍 + 鮮黃底線) */
+    .page-title {
+      text-align: center; 
+      margin-bottom: 2rem; 
+      color: #1e3a8a; 
+      font-size: 1.8rem;
+    }
+    .page-title span {
+      border-bottom: 4px solid #facc15; 
+      padding-bottom: 4px;
+    }
 
-    fetch(fetchUrl, {
-      method: 'GET',
-      redirect: 'follow'
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("HTTP 狀態碼非 200");
-      }
-      return response.json();
-    })
-    .then(data => {
-      if (!data || !data.news || data.news.length === 0) {
-        newsContainer.innerHTML = '<div class="loading-text">目前尚無最新消息。</div>';
-        return;
-      }
+    /* 消息卡片列表容器 */
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
 
-      newsContainer.innerHTML = "";
+    /* 最新消息卡片 (藍邊 + 黃頂條) */
+    .news-card { 
+      background: white; 
+      border-radius: 10px; 
+      padding: 1.5rem; 
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); 
+      border: 2px solid #2563eb; 
+      border-top: 6px solid #facc15;
+    }
 
-      data.news.forEach(item => {
-        const cardHTML = `
-          <article class="news-card">
-            <div class="news-header">
-              <span class="news-badge">${item.category || "公告"}</span>
-              <span class="news-date">📅 ${item.date || ""}</span>
-            </div>
-            <h2 class="news-title">${item.title || "無標題"}</h2>
-            <p class="news-content">${item.content || ""}</p>
-          </article>
+    .news-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .news-date {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: bold;
+    }
+
+    /* 鮮紅分類標籤 */
+    .news-badge {
+      background-color: #dc2626; 
+      color: white;
+      font-size: 0.75rem;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .news-title {
+      font-size: 1.2rem;
+      color: #1e3a8a;
+      margin-bottom: 8px;
+    }
+
+    .news-content {
+      color: #334155;
+      font-size: 0.95rem;
+      white-space: pre-wrap; /* 保持 Google Sheet 內的換行格式 */
+    }
+
+    .loading-text {
+      text-align: center;
+      color: #64748b;
+      font-size: 1.1rem;
+      padding: 2rem;
+      background: white;
+      border-radius: 10px;
+      border: 1px dashed #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <h1 class="page-title">📢 <span>最新消息與公告</span></h1>
+
+    <!-- 動態渲染卡片區域 -->
+    <div class="news-list" id="news-container">
+      <div class="loading-text">🔄 正在連線讀取最新消息...</div>
+    </div>
+  </main>
+
+  <!-- 載入全站統一導覽列與頁尾腳本 -->
+  <script src="./js/header.js"></script>
+
+  <!-- 串接 Google Sheet (GAS Web App) 核心腳本 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const newsContainer = document.getElementById("news-container");
+      
+      // ⚠️ 請務必確認此網址為您 GAS 「管理部署」產生的 Web App 網址 (/exec 結尾)
+      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec";
+      
+      // 動態加入防快存時間戳記，確保手機與電腦每次都能抓到最新資料
+      const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
+
+      fetch(fetchUrl, {
+        method: 'GET',
+        redirect: 'follow' // 關鍵：允許轉址，解決手機 Safari / Chrome 阻擋問題
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("HTTP 狀態非 200，無法讀取資料");
+        }
+        return response.json();
+      })
+      .then(data => {
+        // 驗證回傳的 JSON 結構
+        if (!data || !data.news || data.news.length === 0) {
+          newsContainer.innerHTML = '<div class="loading-text">目前尚無最新消息公告。</div>';
+          return;
+        }
+
+        // 清空載入中提示
+        newsContainer.innerHTML = "";
+
+        // 渲染每一筆最新消息卡片
+        data.news.forEach(item => {
+          const cardHTML = `
+            <article class="news-card">
+              <div class="news-header">
+                <span class="news-badge">${item.category || "門市公告"}</span>
+                <span class="news-date">📅 ${item.date || ""}</span>
+              </div>
+              <h2 class="news-title">${item.title || "最新消息"}</h2>
+              <p class="news-content">${item.content || ""}</p>
+            </article>
+          `;
+          newsContainer.insertAdjacentHTML("beforeend", cardHTML);
+        });
+      })
+      .catch(error => {
+        console.error("最新消息載入失敗：", error);
+        newsContainer.innerHTML = `
+          <div class="news-card" style="border-color: #dc2626; border-top-color: #dc2626; text-align: center;">
+            <h3 style="color: #dc2626; margin-bottom: 0.5rem;">⚠️ 最新消息讀取失敗</h3>
+            <p style="font-size: 0.9rem; color: #64748b;">
+              請確認 Apps Script 部署權限已設為「所有人 (Anyone)」，且網址填寫正確。
+            </p>
+          </div>
         `;
-        newsContainer.insertAdjacentHTML("beforeend", cardHTML);
       });
-    })
-    .catch(error => {
-      console.error("資料讀取失敗：", error);
-      newsContainer.innerHTML = `
-        <div class="news-card" style="border-color: #dc2626; border-top-color: #dc2626; text-align: center;">
-          <h3 style="color: #dc2626; margin-bottom: 0.5rem;">⚠️ 最新消息讀取失敗</h3>
-          <p style="font-size: 0.9rem;">請確認 GAS Web App 部署網址是否正確，且權限已設定為「所有人」。</p>
-        </div>
-      `;
     });
-  });
-</script>
+  </script>
+
+</body>
+</html>
