@@ -208,7 +208,6 @@
       // ==========================================
       const productsContainer = document.getElementById("home-products-container");
 
-      // 備援預設資料 (若 JSON 檔案讀取異常或結構不同時展現)
       const fallbackProducts = [
         {
           title: "Fuguo Speed 700C 輕量化公路車",
@@ -251,14 +250,12 @@
         });
       }
 
-      // 抓取 site-data.json
       fetch("./data/site-data.json?t=" + Date.now())
         .then(res => {
           if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
           return res.json();
         })
         .then(data => {
-          // 相容不同 JSON 結構（陣列、products、bikes 或 items）
           const list = Array.isArray(data) ? data : (data.products || data.bikes || data.items);
           if (list && list.length > 0) {
             renderProducts(list);
@@ -272,12 +269,12 @@
         });
 
       // ==========================================
-      // 2. 讀取 Google Sheets (最新消息)
+      // 2. 讀取 Google Sheets (抓取最後 3 筆最新消息)
       // ==========================================
       const newsContainer = document.getElementById("home-news-container");
       
       // ⚠️ 請記得替換為您的 GAS 部署網址 (/exec 結尾)
-      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
+      const BASE_GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
       const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
       fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
@@ -289,7 +286,10 @@
           }
 
           newsContainer.innerHTML = "";
-          const recentNews = data.news.slice(0, 3);
+          
+          // 💡 反轉陣列 (.reverse())，優先取最下方發布的最後 3 筆最新消息
+          const recentNews = data.news.slice().reverse().slice(0, 3);
+          
           recentNews.forEach(item => {
             const html = `
               <article class="news-card-sm">
