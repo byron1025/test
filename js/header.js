@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <header style="background-color: #1e3a8a; color: white; padding: 1rem 1.5rem; border-bottom: 4px solid #facc15; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
       <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <a href="index.html" style="color: white; text-decoration: none; font-size: 1.3rem; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-          🚴‍♂️ 捷安特富國店
+          🚴‍♂️富國腳踏車店
         </a>
         <nav style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
           <a href="index.html" class="nav-link">首頁</a>
