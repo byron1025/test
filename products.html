@@ -2,7 +2,6 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
-  <!-- 關鍵 RWD Viewport 宣告，允許手機與平板自由縮放 -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>富國腳踏車店 - 車款目錄</title>
   
@@ -15,20 +14,20 @@
     <h1 class="page-title">🚴‍♂️ <span>精選車款與目錄</span></h1>
     <p class="page-subtitle">歡迎親臨門市試乘與諮詢，我們提供最專業的選車與調整服務</p>
 
-    <!-- 分類篩選按鈕區 -->
-    <div class="filter-group">
-      <button class="filter-btn active">全部車種</button>
-      <button class="filter-btn">公路車</button>
-      <button class="filter-btn">登山車</button>
-      <button class="filter-btn">通勤車</button>
-      <button class="filter-btn">電輔車</button>
+    <!-- 分類篩選按鈕區 (加上 data-category 屬性) -->
+    <div class="filter-group" id="filter-group">
+      <button class="filter-btn active" data-category="all">全部車種</button>
+      <button class="filter-btn" data-category="公路車">公路車</button>
+      <button class="filter-btn" data-category="登山車">登山車</button>
+      <button class="filter-btn" data-category="通勤車">通勤車</button>
+      <button class="filter-btn" data-category="電輔車">電輔車</button>
     </div>
 
-    <!-- 車款列表區塊 (支援完全 RWD 自適應縮放) -->
+    <!-- 車款列表區塊 (卡片上加上 data-category 屬性) -->
     <div class="product-grid" id="product-container">
       
-      <!-- 車款卡片 1 -->
-      <article class="card">
+      <!-- 公路車 -->
+      <article class="card" data-category="公路車">
         <div class="card-img-wrapper">
           <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600" alt="Fuguo Speed 700C">
         </div>
@@ -40,8 +39,8 @@
         </div>
       </article>
 
-      <!-- 車款卡片 2 -->
-      <article class="card">
+      <!-- 登山車 -->
+      <article class="card" data-category="登山車">
         <div class="card-img-wrapper">
           <img src="https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600" alt="Fuguo Mountain X2">
         </div>
@@ -53,8 +52,8 @@
         </div>
       </article>
 
-      <!-- 車款卡片 3 -->
-      <article class="card">
+      <!-- 通勤車 -->
+      <article class="card" data-category="通勤車">
         <div class="card-img-wrapper">
           <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600" alt="Fuguo City Classic">
         </div>
@@ -66,11 +65,56 @@
         </div>
       </article>
 
+      <!-- 電輔車 -->
+      <article class="card" data-category="電輔車">
+        <div class="card-img-wrapper">
+          <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600" alt="Fuguo E-Bike Pro">
+        </div>
+        <div class="card-body">
+          <span class="tag">電輔車</span>
+          <h3 class="card-title">Fuguo E-Bike Pro 智慧電力輔助車</h3>
+          <p class="card-desc">高效能鋰電池提供高達 70 公里續航，爬坡輕鬆不費力。</p>
+          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+        </div>
+      </article>
+
     </div>
   </main>
 
   <!-- 全站統一 Header/Footer 動態載入腳本 -->
   <script src="./js/header.js"></script>
+
+  <!-- 分類篩選 JS 觸發腳本 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.card');
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function () {
+          // 1. 移除所有按鈕的 active 狀態
+          filterBtns.forEach(b => b.classList.remove('active'));
+          
+          // 2. 為目前點擊的按鈕加上 active 狀態
+          this.classList.add('active');
+
+          // 3. 取得點擊的分類名稱
+          const selectedCategory = this.getAttribute('data-category');
+
+          // 4. 根據分類顯示/隱藏對應的卡片
+          cards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+            
+            if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+              card.style.display = 'flex'; // 顯示卡片
+            } else {
+              card.style.display = 'none'; // 隱藏卡片
+            }
+          });
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
