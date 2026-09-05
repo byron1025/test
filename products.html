@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 車款目錄</title>
+  <title>捷安特富國自行車店 - 車款目錄</title>
+  
+  <meta name="description" content="捷安特富國自行車店精選車款目錄，包含公路車、登山車、通勤車與電輔車，歡迎預約試乘。">
   
   <!-- 載入通用 CSS 樣式表 -->
   <link rel="stylesheet" href="./css/style.css">
@@ -14,7 +16,7 @@
     <h1 class="page-title">🚴‍♂️ <span>精選車款與目錄</span></h1>
     <p class="page-subtitle">歡迎親臨門市試乘與諮詢，我們提供最專業的選車與調整服務</p>
 
-    <!-- 分類篩選按鈕區 (加上 data-category 屬性) -->
+    <!-- 分類篩選按鈕區 -->
     <div class="filter-group" id="filter-group">
       <button class="filter-btn active" data-category="all">全部車種</button>
       <button class="filter-btn" data-category="公路車">公路車</button>
@@ -23,98 +25,127 @@
       <button class="filter-btn" data-category="電輔車">電輔車</button>
     </div>
 
-    <!-- 車款列表區塊 (卡片上加上 data-category 屬性) -->
+    <!-- 車款列表區塊（透過 JS 動態渲染） -->
     <div class="product-grid" id="product-container">
-      
-      <!-- 公路車 -->
-      <article class="card" data-category="公路車">
-        <div class="card-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600" alt="Fuguo Speed 700C">
-        </div>
-        <div class="card-body">
-          <span class="tag">公路車</span>
-          <h3 class="card-title">Fuguo Speed 700C 輕量化公路車</h3>
-          <p class="card-desc">採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。</p>
-          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-        </div>
-      </article>
-
-      <!-- 登山車 -->
-      <article class="card" data-category="登山車">
-        <div class="card-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600" alt="Fuguo Mountain X2">
-        </div>
-        <div class="card-body">
-          <span class="tag">登山車</span>
-          <h3 class="card-title">Fuguo Mountain X2 雙碟煞登山車</h3>
-          <p class="card-desc">配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。</p>
-          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-        </div>
-      </article>
-
-      <!-- 通勤車 -->
-      <article class="card" data-category="通勤車">
-        <div class="card-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600" alt="Fuguo City Classic">
-        </div>
-        <div class="card-body">
-          <span class="tag">通勤車</span>
-          <h3 class="card-title">Fuguo City Classic 復古通勤車</h3>
-          <p class="card-desc">附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。</p>
-          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-        </div>
-      </article>
-
-      <!-- 電輔車 -->
-      <article class="card" data-category="電輔車">
-        <div class="card-img-wrapper">
-          <img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600" alt="Fuguo E-Bike Pro">
-        </div>
-        <div class="card-body">
-          <span class="tag">電輔車</span>
-          <h3 class="card-title">Fuguo E-Bike Pro 智慧電力輔助車</h3>
-          <p class="card-desc">高效能鋰電池提供高達 70 公里續航，爬坡輕鬆不費力。</p>
-          <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-        </div>
-      </article>
-
+      <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
+        🔄 正在載入車款資料...
+      </div>
     </div>
   </main>
 
   <!-- 全站統一 Header/Footer 動態載入腳本 -->
   <script src="./js/header.js"></script>
 
-  <!-- 分類篩選 JS 觸發腳本 -->
+  <!-- 動態讀取 JSON & 分類篩選腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const productContainer = document.getElementById('product-container');
       const filterBtns = document.querySelectorAll('.filter-btn');
-      const cards = document.querySelectorAll('.card');
 
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-          // 1. 移除所有按鈕的 active 狀態
-          filterBtns.forEach(b => b.classList.remove('active'));
-          
-          // 2. 為目前點擊的按鈕加上 active 狀態
-          this.classList.add('active');
+      // 預設備援資料（若 JSON 讀取失敗時顯示）
+      const fallbackProducts = [
+        {
+          title: "Fuguo Speed 700C 輕量化公路車",
+          category: "公路車",
+          description: "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
+          image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600"
+        },
+        {
+          title: "Fuguo Mountain X2 雙碟煞登山車",
+          category: "登山車",
+          description: "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。",
+          image: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600"
+        },
+        {
+          title: "Fuguo City Classic 復古通勤車",
+          category: "通勤車",
+          description: "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
+          image: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600"
+        },
+        {
+          title: "Fuguo E-Bike Pro 智慧電力輔助車",
+          category: "電輔車",
+          description: "高效能鋰電池提供高達 70 公里續航，爬坡輕鬆不費力。",
+          image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600"
+        }
+      ];
 
-          // 3. 取得點擊的分類名稱
-          const selectedCategory = this.getAttribute('data-category');
+      // 渲染卡片至頁面
+      function renderProducts(products) {
+        if (!productContainer) return;
+        
+        if (products.length === 0) {
+          productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">目前尚無該分類的車款資料。</div>';
+          return;
+        }
 
-          // 4. 根據分類顯示/隱藏對應的卡片
-          cards.forEach(card => {
-            const cardCategory = card.getAttribute('data-category');
-            
-            if (selectedCategory === 'all' || cardCategory === selectedCategory) {
-              card.style.display = 'flex'; // 顯示卡片
+        productContainer.innerHTML = "";
+        products.forEach(item => {
+          const categoryName = item.category || item.type || '精選車款';
+          const cardHTML = `
+            <article class="card" data-category="${categoryName}">
+              <div class="card-img-wrapper">
+                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || item.name}">
+              </div>
+              <div class="card-body">
+                <span class="tag">${categoryName}</span>
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <p class="card-desc">${item.description || item.desc || ''}</p>
+                <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+              </div>
+            </article>
+          `;
+          productContainer.insertAdjacentHTML('beforeend', cardHTML);
+        });
+      }
+
+      // 初始化：抓取 ./data/site-data.json
+      fetch('./data/site-data.json?t=' + Date.now())
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          // 相容不同 JSON 結構（陣列、products、bikes 或 items）
+          const list = Array.isArray(data) ? data : (data.products || data.bikes || data.items);
+          if (list && list.length > 0) {
+            setupFilter(list);
+          } else {
+            setupFilter(fallbackProducts);
+          }
+        })
+        .catch(err => {
+          console.warn("data/site-data.json 讀取失敗，使用備援資料:", err);
+          setupFilter(fallbackProducts);
+        });
+
+      // 設定篩選按鈕事件 binding
+      function setupFilter(allProducts) {
+        // 初次渲染全車款
+        renderProducts(allProducts);
+
+        filterBtns.forEach(btn => {
+          btn.addEventListener('click', function () {
+            // 切換 active 狀態
+            filterBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const selectedCategory = this.getAttribute('data-category');
+
+            if (selectedCategory === 'all') {
+              renderProducts(allProducts);
             } else {
-              card.style.display = 'none'; // 隱藏卡片
+              const filtered = allProducts.filter(item => {
+                const cat = item.category || item.type;
+                return cat === selectedCategory;
+              });
+              renderProducts(filtered);
             }
           });
         });
-      });
+      }
+
     });
   </script>
-
 </body>
 </html>
