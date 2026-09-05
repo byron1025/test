@@ -1,3 +1,29 @@
+/* ==========================================================================
+   1. CSS 變數定義 (藍、紅、黃三主色與基礎設定)
+   ========================================================================== */
+:root {
+  /* 三主色 */
+  --primary-blue: #1e3a8a;       /* 深藍：標題、Header */
+  --brand-blue: #2563eb;         /* 鮮藍：邊框、次要按鈕 */
+  --accent-red: #dc2626;         /* 鮮紅：主要行動按鈕 (CTA) */
+  --accent-red-hover: #b91c1c;   /* 深紅：按鈕 Hover */
+  --accent-yellow: #facc15;      /* 鮮黃：點綴線條、標題底線 */
+  
+  /* 中性色 */
+  --bg-main: #f8fafc;            /* 頁面背景色 */
+  --bg-card: #ffffff;            /* 卡片背景色 */
+  --text-dark: #0f172a;          /* 主文字色 */
+  --text-muted: #64748b;         /* 次要文字色 */
+  --border-color: #cbd5e1;       /* 輸入框/分界線邊框 */
+  
+  /* 圓角與陰影 */
+  --radius: 10px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   2. 全局重置 (Reset) 與基礎樣式
+   ========================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -5,161 +31,208 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-dark);
   line-height: 1.6;
-  color: #334155;
-  background-color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Header 導覽列 */
-header {
-  background: #0f172a;
-  color: #ffffff;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.logo {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #ffffff;
+a {
+  color: inherit;
   text-decoration: none;
 }
 
-nav a {
-  margin-left: 1.2rem;
-  color: #cbd5e1;
-  text-decoration: none;
-  font-weight: 500;
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-nav a:hover {
-  color: #38bdf8;
-}
-
+/* ==========================================================================
+   3. 版面容器 (RWD Layout)
+   ========================================================================== */
 .container {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
-.hero {
-  text-align: center;
-  padding: 3.5rem 1rem;
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  margin-bottom: 2rem;
-}
-
-.hero h1 {
-  font-size: 2.25rem;
-  color: #0f172a;
-  margin-bottom: 0.5rem;
-}
-
-/* 卡片與網格 */
-.features, .product-grid {
+/* 排版網格：自動自適應欄數 */
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 }
 
-.card, .news-card {
-  background: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
+/* 雙欄表單/資訊卡片版面 */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
-/* 分類篩選按鈕 */
-.filter-container {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
+/* ==========================================================================
+   4. 標題與文字 (Typography)
+   ========================================================================== */
+.page-title {
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--primary-blue);
+  margin-bottom: 0.5rem;
+}
+
+.page-title span {
+  border-bottom: 4px solid var(--accent-yellow);
+  padding-bottom: 4px;
+}
+
+.page-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
   margin-bottom: 2rem;
 }
 
-.filter-btn {
-  padding: 8px 16px;
-  border: 1px solid #cbd5e1;
-  background-color: #ffffff;
-  color: #475569;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-.filter-btn:hover, .filter-btn.active {
-  background-color: #0284c7;
-  color: #ffffff;
-  border-color: #0284c7;
-}
-
-/* 車款卡片 */
-.product-card {
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
+/* ==========================================================================
+   5. 三主色卡片組件 (Card Component)
+   ========================================================================== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 2px solid var(--brand-blue);
+  border-top: 6px solid var(--accent-yellow);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
-.product-img {
+/* 卡片圖片容器 (解決黑邊與自動縮放) */
+.card-img-box {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
+  height: 200px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #f1f5f9;
+  margin: -1.5rem -1.5rem 1rem -1.5rem; /* 抵銷父層 padding */
 }
 
-.product-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
+.card-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.card-title {
+  color: var(--primary-blue);
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-desc {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
   flex-grow: 1;
 }
 
-.product-tag {
-  background: #e0f2fe;
-  color: #0369a1;
-  font-size: 0.75rem;
-  font-weight: bold;
-  padding: 2px 8px;
-  border-radius: 4px;
-  width: fit-content;
-  margin-bottom: 8px;
-}
-
-.product-price {
-  font-size: 1.15rem;
-  font-weight: bold;
-  color: #0284c7;
-  margin-top: 10px;
-}
-
-footer {
-  text-align: center;
-  padding: 2rem;
-  color: #64748b;
-  font-size: 0.875rem;
-  margin-top: 3rem;
-  border-top: 1px solid #e2e8f0;
-}
-.card img {
+/* ==========================================================================
+   6. 按鈕系統 (Buttons)
+   ========================================================================== */
+/* 主要行動按鈕 (紅色) */
+.btn-primary {
+  display: block;
   width: 100%;
-  height: 220px; /* 固定的高度 */
-  object-fit: cover; /* 自動填滿並裁切多餘邊緣 */
+  padding: 12px;
+  background-color: var(--accent-red);
+  color: white;
+  text-align: center;
+  border: none;
   border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(220, 38, 38, 0.2);
 }
-.card-img-container {
-  background-color: #ffffff; /* 強制白底 */
-  padding: 10px;
+
+.btn-primary:hover {
+  background-color: var(--accent-red-hover);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* 次要按鈕 (藍底 / 黃 Hover) */
+.btn-secondary {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: var(--brand-blue);
+  color: white;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--accent-yellow);
+  color: var(--primary-blue);
+}
+
+/* ==========================================================================
+   7. 表單組件 (Form Elements)
+   ========================================================================== */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 4px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--brand-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ==========================================================================
+   8. 媒體查詢 (RWD Breakpoints)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+  .page-title {
+    font-size: 1.5rem;
+  }
+  .card {
+    padding: 1rem;
+  }
 }
