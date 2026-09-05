@@ -1,38 +1,32 @@
-[
-  {
-    "id": "p1",
-    "name": "Fuguo Speed 700C 輕量化公路車",
-    "category": "road",
-    "categoryName": "公路車",
-    "price": "NT$ 18,500",
-    "desc": "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
-    "image": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&auto=format&fit=crop&q=60"
-  },
-  {
-    "id": "p2",
-    "name": "Fuguo Mountain X2 雙碟煞登山車",
-    "category": "mountain",
-    "categoryName": "登山車",
-    "price": "NT$ 15,200",
-    "desc": "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應對林道與崎嶇路面。",
-    "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&auto=format&fit=crop&q=60"
-  },
-  {
-    "id": "p3",
-    "name": "Fuguo City Classic 復古通勤車",
-    "category": "city",
-    "categoryName": "通勤車",
-    "price": "NT$ 6,800",
-    "desc": "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
-    "image": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=500&auto=format&fit=crop&q=60"
-  },
-  {
-    "id": "p4",
-    "name": "FastRoad E+電動輔助車",
-    "category": "ebike",
-    "categoryName": "電輔車",
-    "price": "NT$ 79800",
-    "desc": "品味全方位的騎乘樂趣。從尖端智能科技出發，結合三大核心領域：動力控制系統、電池管理系統、電機輸出系統，給您輕鬆寫意、自在騎行，為您帶來更純粹的騎乘樂趣！。",
-    "image": "https://github.com/byron1025/test/blob/main/7200002104_MY26FASTROADE.jpg?raw=true"
-  }
-]
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "Fuguo Speed 700C 輕量化公路車",
+      "category": "公路車",
+      "description": "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
+      "image": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600"
+    },
+    {
+      "id": "2",
+      "title": "Fuguo Mountain X2 雙碟煞登山車",
+      "category": "登山車",
+      "description": "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。",
+      "image": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600"
+    },
+    {
+      "id": "3",
+      "title": "Fuguo City Classic 復古通勤車",
+      "category": "通勤車",
+      "description": "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
+      "image": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600"
+    },
+    {
+      "id": "4",
+      "title": "Fuguo E-Bike Pro 智慧電力輔助車",
+      "category": "電輔車",
+      "description": "高效能鋰電池提供高達 70 公里續航，爬坡輕鬆不費力。",
+      "image": "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600"
+    }
+  ]
+}
