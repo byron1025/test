@@ -1,11 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // 動態注入手機版響應式 CSS 樣式
+  // 動態注入響應式與漢堡選單 CSS 樣式
   const style = document.createElement('style');
   style.innerHTML = `
     .main-header {
       background-color: #ffffff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       width: 100%;
+      position: relative;
+      z-index: 1000;
     }
     .header-container {
       display: flex;
@@ -14,14 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
       padding: 12px 20px;
       max-width: 1200px;
       margin: 0 auto;
-      flex-wrap: wrap; /* 允許手機版自動換行 */
-      gap: 12px;
     }
     .header-left {
       display: flex;
       align-items: center;
       gap: 12px;
-      flex-wrap: wrap;
     }
     .brand-logo {
       font-weight: bold;
@@ -40,8 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+      gap: 20px;
     }
     .nav-links a {
       text-decoration: none;
@@ -54,31 +52,47 @@ document.addEventListener("DOMContentLoaded", function () {
       color: #2563eb;
     }
 
-    /* 📱 手機版調整 (螢幕寬度小於 768px 時) */
+    /* 🍔 漢堡選單按鈕（預設隱藏） */
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #1e3a8a;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+
+    /* 📱 手機版樣式 (螢幕寬度 < 768px) */
     @media (max-width: 768px) {
-      .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px 15px;
-        gap: 10px;
-      }
-      .header-left {
-        width: 100%;
-        justify-content: space-between; /* 手機版將店名與社群圖示分散兩端 */
-      }
-      .social-group {
-        border-left: none; /* 手機版移除分隔線 */
-        padding-left: 0;
+      .hamburger-btn {
+        display: block; /* 手機版顯示漢堡按鈕 */
       }
       .nav-links {
+        display: none; /* 手機版預設隱藏選單 */
+        flex-direction: column;
         width: 100%;
-        justify-content: flex-start;
-        gap: 12px;
-        padding-top: 6px;
-        border-top: 1px solid #f1f5f9; /* 手機版加上微弱分隔線 */
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        padding: 15px 0;
+        gap: 0;
+        border-top: 1px solid #f1f5f9;
+      }
+      .nav-links.active {
+        display: flex; /* 點擊漢堡按鈕後展開 */
       }
       .nav-links a {
-        font-size: 0.9rem;
+        padding: 12px 24px;
+        width: 100%;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f8fafc;
+      }
+      .nav-links a:hover {
+        background-color: #f1f5f9;
       }
     }
   `;
@@ -92,10 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
         <!-- 左側：品牌 Logo + 社群圖示按鈕 -->
         <div class="header-left">
           <a href="index.html" class="brand-logo">
-            🚴‍♂️ 富國腳踏車店
+            🚴‍♂️ 捷安特富國自行車店
           </a>
 
-          <!-- 社群與商家地圖連結 -->
           <div class="social-group">
             <a href="https://www.facebook.com/profile.php?id=61579727196259" target="_blank" title="Facebook 粉絲專頁" style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; overflow: hidden; vertical-align: middle;">
               <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook" style="width: 30px !important; height: 30px !important; display: block; object-fit: cover;">
@@ -113,8 +126,13 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         </div>
 
-        <!-- 右側：主選單連結 -->
-        <nav class="nav-links">
+        <!-- 🍔 右側漢堡按鈕 (手機版顯示) -->
+        <button class="hamburger-btn" id="hamburger-toggle" aria-label="切換選單">
+          ☰
+        </button>
+
+        <!-- 主選單連結 -->
+        <nav class="nav-links" id="nav-menu">
           <a href="index.html">首頁</a>
           <a href="products.html">精選車款</a>
           <a href="news.html">最新消息</a>
@@ -126,4 +144,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 將 Header 插入頁面最頂端
   document.body.insertAdjacentHTML("afterbegin", headerHTML);
+
+  // 🍔 綁定漢堡按鈕點擊事件
+  const toggleBtn = document.getElementById("hamburger-toggle");
+  const navMenu = document.getElementById("nav-menu");
+
+  if (toggleBtn && navMenu) {
+    toggleBtn.addEventListener("click", function () {
+      navMenu.classList.toggle("active");
+      // 切換按鈕圖案 (☰ ↔ ✖)
+      toggleBtn.innerHTML = navMenu.classList.contains("active") ? "✖" : "☰";
+    });
+  }
 });
