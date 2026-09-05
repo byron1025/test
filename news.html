@@ -18,7 +18,10 @@
   <script>
     // ⚠️ 請替換為您部署後發佈的 Web App 網址 (結尾必須是 /exec)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec";
-
+fetch(GAS_NEWS_URL, {
+  method: 'GET',
+  redirect: 'follow'
+})
     function handleNewsData(data) {
       const container = document.getElementById('news-container');
       if (!container) return;
