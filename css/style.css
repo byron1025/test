@@ -1,49 +1,218 @@
-/* 1. 主標題 (深藍 + 鮮黃底線) */
+/* ==========================================================================
+   1. Design Tokens (三主色與變數)
+   ========================================================================== */
+:root {
+  --primary-blue: #1e3a8a;       /* 主結構/標題深藍 */
+  --brand-blue: #2563eb;         /* 次要邊框/選單藍 */
+  --accent-red: #dc2626;         /* 行動焦點紅 (CTA) */
+  --accent-red-hover: #b91c1c;   /* 紅色 Hover */
+  --accent-yellow: #facc15;      /* 點綴與底線黃 */
+  
+  --bg-main: #f8fafc;            /* 全站背景 */
+  --bg-card: #ffffff;            /* 卡片純白背景 */
+  --text-dark: #0f172a;          /* 主要內文色 */
+  --text-muted: #64748b;         /* 次要標籤/文字色 */
+  --border-color: #cbd5e1;
+  
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   2. 全局重置 (Reset) 與基礎樣式
+   ========================================================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==========================================================================
+   3. 版面容器與標題 (Layout & Typography)
+   ========================================================================== */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
 .page-title {
-  color: #1e3a8a;
   text-align: center;
   font-size: 1.8rem;
-  margin: 1.5rem 0;
+  color: var(--primary-blue);
+  margin-bottom: 0.5rem;
 }
+
 .page-title span {
-  border-bottom: 4px solid #facc15;
+  border-bottom: 4px solid var(--accent-yellow);
   padding-bottom: 4px;
 }
 
-/* 2. 內容卡片 (藍色邊框 + 黃色頂部亮點) */
-.card {
-  background: white;
-  border: 2px solid #2563eb;
-  border-top: 6px solid #facc15;
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.page-subtitle {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
 }
 
-/* 3. 主要行動按鈕 (鮮紅色) */
-.btn-primary {
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+/* 分類篩選按鈕區 */
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.filter-btn {
+  padding: 8px 18px;
+  border: 2px solid var(--brand-blue);
+  background: #ffffff;
+  color: var(--primary-blue);
+  border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
-}
-.btn-primary:hover {
-  background-color: #b91c1c;
+  transition: all 0.2s ease;
 }
 
-/* 4. 次要/標籤按鈕 (藍色 / 黃色 hover) */
-.btn-secondary {
-  background-color: #2563eb;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--brand-blue);
+  color: #ffffff;
 }
-.btn-secondary:hover {
-  background-color: #facc15;
-  color: #1e3a8a;
+
+/* ==========================================================================
+   4. RWD 自動縮放網格 (Grid Layout)
+   ========================================================================== */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ==========================================================================
+   5. 車款卡片與手機圖片 RWD 縮放控制 (重點修正)
+   ========================================================================== */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 2px solid var(--brand-blue);
+  border-top: 6px solid var(--accent-yellow);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* 關鍵修正：圖片比例容器 (手機與電腦皆可等比隨寬度自動縮小) */
+.card-img-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* 強制保持 16:9 比例，寬度縮小時高度等比縮小 */
+  background-color: #ffffff; /* 純白底，去除黑邊感 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 完整顯示車身且不變形 */
+  padding: 8px;
+}
+
+.card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #eff6ff;
+  color: var(--brand-blue);
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.card-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+/* 行動按鈕 (紅色) */
+.btn-detail {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--accent-red);
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-detail:hover {
+  background-color: var(--accent-red-hover);
+}
+
+/* ==========================================================================
+   6. 媒體查詢 (RWD Breakpoints)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem 0.75rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .product-grid {
+    grid-template-columns: 1fr; /* 手機單欄顯示 */
+  }
 }
