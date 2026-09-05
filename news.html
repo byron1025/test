@@ -1,59 +1,53 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 最新消息</title>
-  <link rel="stylesheet" href="./css/style.css">
-</head>
-<body>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const newsContainer = document.getElementById("news-container");
+    
+    // ⚠️ 請務必替換為您 GAS 管理部署後複製的 /exec 網址
+    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/execc";
+    
+    // 自動加上時間戳記防止快存
+    const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
-  <main class="container">
-    <h1 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a;">📢 最新消息與公告</h1>
-    <div id="news-container">⏳ 最新消息載入中...</div>
-  </main>
-
-  <script src="./js/header.js"></script>
-
-  <script>
-    // ⚠️ 請替換為您部署後發佈的 Web App 網址 (結尾必須是 /exec)
-    /const GAS_NEWS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec?v=" + Date.now();
-
-fetch(GAS_NEWS_URL, {
-  method: 'GET',
-  redirect: 'follow'
-
-})
-    function handleNewsData(data) {
-      const container = document.getElementById('news-container');
-      if (!container) return;
-
-      if (!data || data.length === 0) {
-        container.innerHTML = "<p style='text-align:center;'>目前尚無最新消息。</p>";
+    fetch(fetchUrl, {
+      method: 'GET',
+      redirect: 'follow'
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("HTTP 狀態碼非 200");
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (!data || !data.news || data.news.length === 0) {
+        newsContainer.innerHTML = '<div class="loading-text">目前尚無最新消息。</div>';
         return;
       }
 
-      container.innerHTML = data.map(item => `
-        <div class="news-card">
-          <span style="color: #0284c7; font-weight: bold; font-size: 0.9rem;">${item.date || ''}</span>
-          <h3 style="margin: 5px 0; color: #1e293b;">${item.title || ''}</h3>
-          <p style="color: #475569; margin: 0; line-height: 1.5;">${item.content || ''}</p>
+      newsContainer.innerHTML = "";
+
+      data.news.forEach(item => {
+        const cardHTML = `
+          <article class="news-card">
+            <div class="news-header">
+              <span class="news-badge">${item.category || "公告"}</span>
+              <span class="news-date">📅 ${item.date || ""}</span>
+            </div>
+            <h2 class="news-title">${item.title || "無標題"}</h2>
+            <p class="news-content">${item.content || ""}</p>
+          </article>
+        `;
+        newsContainer.insertAdjacentHTML("beforeend", cardHTML);
+      });
+    })
+    .catch(error => {
+      console.error("資料讀取失敗：", error);
+      newsContainer.innerHTML = `
+        <div class="news-card" style="border-color: #dc2626; border-top-color: #dc2626; text-align: center;">
+          <h3 style="color: #dc2626; margin-bottom: 0.5rem;">⚠️ 最新消息讀取失敗</h3>
+          <p style="font-size: 0.9rem;">請確認 GAS Web App 部署網址是否正確，且權限已設定為「所有人」。</p>
         </div>
-      `).join('');
-    }
-
-    function fetchNews() {
-      const script = document.createElement('script');
-      script.src = `${GAS_URL}?callback=handleNewsData`;
-      script.onerror = function() {
-        document.getElementById('news-container').innerHTML = 
-          "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請確認 GAS 網址或部署權限設定。</p>";
-      };
-      document.body.appendChild(script);
-    }
-
-    document.addEventListener("DOMContentLoaded", fetchNews);
-  </script>
-
-</body>
-</html>
+      `;
+    });
+  });
+</script>
