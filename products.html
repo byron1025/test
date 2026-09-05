@@ -25,7 +25,7 @@
       <button class="filter-btn" data-category="電輔車">電輔車</button>
     </div>
 
-    <!-- 車款列表區塊（透過 JS 動態渲染） -->
+    <!-- 車款列表區塊（透過 JS 動態讀取 JSON 渲染） -->
     <div class="product-grid" id="product-container">
       <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
         🔄 正在載入車款資料...
@@ -36,61 +36,33 @@
   <!-- 全站統一 Header/Footer 動態載入腳本 -->
   <script src="./js/header.js"></script>
 
-  <!-- 動態讀取 JSON & 分類篩選腳本 -->
+  <!-- 動態讀取 site-data.json & 分類篩選腳本 -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const productContainer = document.getElementById('product-container');
       const filterBtns = document.querySelectorAll('.filter-btn');
 
-      // 預設備援資料（若 JSON 讀取失敗時顯示）
-      const fallbackProducts = [
-        {
-          title: "Fuguo Speed 700C 輕量化公路車",
-          category: "公路車",
-          description: "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
-          image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600"
-        },
-        {
-          title: "Fuguo Mountain X2 雙碟煞登山車",
-          category: "登山車",
-          description: "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。",
-          image: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600"
-        },
-        {
-          title: "Fuguo City Classic 復古通勤車",
-          category: "通勤車",
-          description: "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
-          image: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600"
-        },
-        {
-          title: "Fuguo E-Bike Pro 智慧電力輔助車",
-          category: "電輔車",
-          description: "高效能鋰電池提供高達 70 公里續航，爬坡輕鬆不費力。",
-          image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600"
-        }
-      ];
-
       // 渲染卡片至頁面
       function renderProducts(products) {
         if (!productContainer) return;
         
-        if (products.length === 0) {
+        if (!products || products.length === 0) {
           productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">目前尚無該分類的車款資料。</div>';
           return;
         }
 
         productContainer.innerHTML = "";
         products.forEach(item => {
-          const categoryName = item.category || item.type || '精選車款';
+          const categoryName = item.category || '精選車款';
           const cardHTML = `
             <article class="card" data-category="${categoryName}">
               <div class="card-img-wrapper">
-                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || item.name}">
+                <img src="${item.image || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || '精選車款'}">
               </div>
               <div class="card-body">
                 <span class="tag">${categoryName}</span>
-                <h3 class="card-title">${item.title || item.name}</h3>
-                <p class="card-desc">${item.description || item.desc || ''}</p>
+                <h3 class="card-title">${item.title || ''}</h3>
+                <p class="card-desc">${item.description || ''}</p>
                 <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
               </div>
             </article>
@@ -99,34 +71,14 @@
         });
       }
 
-      // 初始化：抓取 ./data/site-data.json
-      fetch('./data/site-data.json?t=' + Date.now())
-        .then(res => {
-          if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
-          return res.json();
-        })
-        .then(data => {
-          // 相容不同 JSON 結構（陣列、products、bikes 或 items）
-          const list = Array.isArray(data) ? data : (data.products || data.bikes || data.items);
-          if (list && list.length > 0) {
-            setupFilter(list);
-          } else {
-            setupFilter(fallbackProducts);
-          }
-        })
-        .catch(err => {
-          console.warn("data/site-data.json 讀取失敗，使用備援資料:", err);
-          setupFilter(fallbackProducts);
-        });
-
-      // 設定篩選按鈕事件 binding
+      // 設定分類按鈕點擊事件
       function setupFilter(allProducts) {
-        // 初次渲染全車款
+        // 初次渲染全部車款
         renderProducts(allProducts);
 
         filterBtns.forEach(btn => {
           btn.addEventListener('click', function () {
-            // 切換 active 狀態
+            // 切換按鈕 active 樣式
             filterBtns.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
 
@@ -135,15 +87,27 @@
             if (selectedCategory === 'all') {
               renderProducts(allProducts);
             } else {
-              const filtered = allProducts.filter(item => {
-                const cat = item.category || item.type;
-                return cat === selectedCategory;
-              });
+              const filtered = allProducts.filter(item => item.category === selectedCategory);
               renderProducts(filtered);
             }
           });
         });
       }
+
+      // 抓取 ./data/site-data.json
+      fetch('./data/site-data.json?t=' + Date.now())
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          const list = Array.isArray(data) ? data : (data.products || []);
+          setupFilter(list);
+        })
+        .catch(err => {
+          console.error("data/site-data.json 讀取失敗:", err);
+          productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">無法載入車款資料，請確認 ./data/site-data.json 檔案路徑與格式。</div>';
+        });
 
     });
   </script>
