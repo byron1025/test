@@ -1,43 +1,92 @@
-<!-- 1. 確定 HTML 頁面中有這個容器 -->
-<div id="news-container">⏳ 最新消息載入中...</div>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>最新消息</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: #f8fafc;
+      color: #334155;
+    }
+    h1 {
+      text-align: center;
+      color: #0f172a;
+    }
+    #news-container {
+      margin-top: 20px;
+    }
+    .news-card {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .news-date {
+      color: #0284c7;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .news-title {
+      margin: 6px 0;
+      font-size: 1.25rem;
+      color: #1e293b;
+    }
+    .news-content {
+      margin: 0;
+      color: #475569;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
 
-<!-- 2. 在頁面底部加上 JavaScript -->
-<script>
-  // ⚠️ 請把下方網址替換為您第一步複製的 GAS 網址 (結尾必須是 /exec)
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec";
+  <h1>📢 最新消息</h1>
+  <div id="news-container">⏳ 最新消息載入中...</div>
 
-  // 這是一個全域回調函數，當 JSONP 抓完資料時會自動執行
-  function handleNewsData(data) {
-    const container = document.getElementById('news-container');
-    if (!container) return;
+  <script>
+    // ⚠️ 請替換為您部署後發佈的 Web App 網址 (結尾必須是 /exec)
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec";
 
-    if (!data || data.length === 0) {
-      container.innerHTML = "<p style='text-align:center;'>目前尚無最新消息。</p>";
-      return;
+    // JSONP 回調函數：接收資料並渲染畫面
+    function handleNewsData(data) {
+      const container = document.getElementById('news-container');
+      if (!container) return;
+
+      if (!data || data.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>目前尚無最新消息。</p>";
+        return;
+      }
+
+      container.innerHTML = data.map(item => `
+        <div class="news-card">
+          <span class="news-date">${item.date || ''}</span>
+          <h3 class="news-title">${item.title || ''}</h3>
+          <p class="news-content">${item.content || ''}</p>
+        </div>
+      `).join('');
     }
 
-    container.innerHTML = data.map(item => `
-      <div class="news-card" style="border-bottom: 1px solid #e2e8f0; padding: 15px 0; margin-bottom: 10px;">
-        <span style="color: #0284c7; font-weight: bold; display: block;">${item.date || ''}</span>
-        <h3 style="margin: 5px 0; font-size: 1.2rem; color: #1e293b;">${item.title || ''}</h3>
-        <p style="color: #475569; margin: 0; line-height: 1.5;">${item.content || ''}</p>
-      </div>
-    `).join('');
-  }
+    // 發送 JSONP 請求 (徹底解決跨網域 CORS 問題)
+    function fetchNews() {
+      const script = document.createElement('script');
+      script.src = `${GAS_URL}?callback=handleNewsData`;
+      script.onerror = function() {
+        const container = document.getElementById('news-container');
+        if (container) {
+          container.innerHTML = "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請確認網路連線或 GAS 網址設定。</p>";
+        }
+      };
+      document.body.appendChild(script);
+    }
 
-  // 利用動態插入 <script> 標籤呼叫 API，徹底避開跨網域 (CORS) 阻擋
-  function fetchNewsWithJSONP() {
-    const script = document.createElement('script');
-    script.src = `${GAS_URL}?callback=handleNewsData`;
-    script.onerror = function() {
-      const container = document.getElementById('news-container');
-      if (container) {
-        container.innerHTML = "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請檢查網路連線或 GAS 網址。</p>";
-      }
-    };
-    document.body.appendChild(script);
-  }
+    document.addEventListener("DOMContentLoaded", fetchNews);
+  </script>
 
-  // 當網頁載入完成後執行
-  document.addEventListener("DOMContentLoaded", fetchNewsWithJSONP);
-</script>
+</body>
+</html>
