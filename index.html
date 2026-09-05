@@ -171,7 +171,7 @@
       </div>
     </section>
 
-    <!-- 1. 精選車款展示區 (連線 ./data/site-data.json) -->
+    <!-- 1. 精選車款展示區 (連線 products.json) -->
     <section>
       <div class="section-header">
         <h2 class="section-title-text">🚲 精選車款推薦</h2>
@@ -204,43 +204,30 @@
     document.addEventListener("DOMContentLoaded", function () {
       
       // ==========================================
-      // 1. 讀取 ./data/site-data.json (精選車款)
+      // 1. 動態讀取 products.json (取前 3 筆精選車款)
       // ==========================================
       const productsContainer = document.getElementById("home-products-container");
 
-      const fallbackProducts = [
-        {
-          title: "Fuguo Speed 700C 輕量化公路車",
-          category: "公路車",
-          description: "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
-          image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600"
-        },
-        {
-          title: "Fuguo Mountain X2 雙碟煞登山車",
-          category: "登山車",
-          description: "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。",
-          image: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600"
-        },
-        {
-          title: "Fuguo City Classic 復古通勤車",
-          category: "通勤車",
-          description: "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
-          image: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600"
-        }
-      ];
-
       function renderProducts(items) {
         if (!productsContainer) return;
+        
+        if (!items || items.length === 0) {
+          productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無精選車款資料。</div>';
+          return;
+        }
+
         productsContainer.innerHTML = "";
+        // 取 products.json 中的前 3 筆車種
         items.slice(0, 3).forEach(item => {
+          const categoryName = item.category || item.type || '精選車款';
           const cardHTML = `
             <article class="card">
               <div class="card-img-wrapper">
-                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || '精選車款'}">
+                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || item.name || '精選車款'}">
               </div>
               <div class="card-body">
-                <span class="tag">${item.category || item.type || '精選車款'}</span>
-                <h3 class="card-title">${item.title || item.name}</h3>
+                <span class="tag">${categoryName}</span>
+                <h3 class="card-title">${item.title || item.name || ''}</h3>
                 <p class="card-desc">${item.description || item.desc || ''}</p>
                 <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
               </div>
@@ -250,22 +237,30 @@
         });
       }
 
-      fetch("./data/site-data.json?t=" + Date.now())
-        .then(res => {
+      // 嘗試讀取 products.json (優先嘗試 ./data/products.json，若找不到則嘗試 ./products.json)
+      function fetchProductsJSON(url) {
+        return fetch(url + '?t=' + Date.now()).then(res => {
           if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
           return res.json();
-        })
+        });
+      }
+
+      fetchProductsJSON('./data/products.json')
+        .catch(() => fetchProductsJSON('./products.json'))
         .then(data => {
-          const list = Array.isArray(data) ? data : (data.products || data.bikes || data.items);
-          if (list && list.length > 0) {
-            renderProducts(list);
-          } else {
-            renderProducts(fallbackProducts);
+          let list = [];
+          if (Array.isArray(data)) {
+            list = data;
+          } else if (data && typeof data === 'object') {
+            list = data.products || data.bikes || data.items || [];
           }
+          renderProducts(list);
         })
         .catch(err => {
-          console.warn("data/site-data.json 讀取失敗，載入預設車款資料:", err);
-          renderProducts(fallbackProducts);
+          console.error("products.json 讀取失敗:", err);
+          if (productsContainer) {
+            productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">無法載入精選車款，請確認 products.json 檔案路徑與內容。</div>';
+          }
         });
 
       // ==========================================
@@ -273,7 +268,6 @@
       // ==========================================
       const newsContainer = document.getElementById("home-news-container");
       
-      // ⚠️ 請記得替換為您的 GAS 部署網址 (/exec 結尾)
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
       const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
@@ -287,7 +281,7 @@
 
           newsContainer.innerHTML = "";
           
-          // 💡 反轉陣列 (.reverse())，優先取最下方發布的最後 3 筆最新消息
+          // 反轉陣列，優先取發布在最下方的最後 3 筆最新消息
           const recentNews = data.news.slice().reverse().slice(0, 3);
           
           recentNews.forEach(item => {
