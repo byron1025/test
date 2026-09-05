@@ -3,20 +3,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const headerHTML = `
     <header class="main-header">
       <div class="header-container" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px;">
-        <!-- 品牌 Logo / 名稱 -->
-        <a href="index.html" class="brand-logo" style="font-weight: bold; text-decoration: none; font-size: 1.2rem;">
-          🚴‍♂️ 捷安特富國自行車店
-        </a>
+        
+        <!-- 左側：品牌 Logo + 社群圖示按鈕 -->
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <a href="index.html" class="brand-logo" style="font-weight: bold; text-decoration: none; font-size: 1.2rem;">
+            🚴‍♂️ 捷安特富國自行車店
+          </a>
 
-        <!-- 主選單連結 -->
-        <nav class="nav-links" style="display: flex; align-items: center; gap: 15px;">
-          <a href="index.html" style="text-decoration: none;">首頁</a>
-          <a href="products.html" style="text-decoration: none;">精選車款</a>
-          <a href="news.html" style="text-decoration: none;">最新消息</a>
-          <a href="contact.html" style="text-decoration: none;">聯絡與預約</a>
-          
-          <!-- 社群與商家地圖連結 (行內樣式硬性限制 30px) -->
-          <div style="display: inline-flex; align-items: center; gap: 8px; margin-left: 10px; padding-left: 10px; border-left: 1px solid #ccc;">
+          <!-- 社群與商家地圖連結（放在 Logo 旁邊） -->
+          <div style="display: inline-flex; align-items: center; gap: 8px; padding-left: 10px; border-left: 1px solid #ccc;">
             <a href="https://www.facebook.com/profile.php?id=61579727196259" target="_blank" title="Facebook 粉絲專頁" style="display: inline-block; width: 30px; height: 30px; border-radius: 50%; overflow: hidden; vertical-align: middle;">
               <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook" style="width: 30px !important; height: 30px !important; display: block; object-fit: cover;">
             </a>
@@ -31,6 +26,14 @@ document.addEventListener("DOMContentLoaded", function () {
               </svg>
             </a>
           </div>
+        </div>
+
+        <!-- 右側：主選單連結 -->
+        <nav class="nav-links" style="display: flex; align-items: center; gap: 15px;">
+          <a href="index.html" style="text-decoration: none;">首頁</a>
+          <a href="products.html" style="text-decoration: none;">精選車款</a>
+          <a href="news.html" style="text-decoration: none;">最新消息</a>
+          <a href="contact.html" style="text-decoration: none;">聯絡與預約</a>
         </nav>
       </div>
     </header>
