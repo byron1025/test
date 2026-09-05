@@ -3,26 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店</title>
+  <title>捷安特富國自行車店 - 官方網站</title>
+  
+  <!-- SEO & 社群分享設定 -->
+  <meta name="description" content="捷安特富國自行車店（國民旅遊卡特約商店），提供專業單車銷售、電輔車維修與全車健檢保養服務。">
+  <meta property="og:title" content="捷安特富國自行車店 - 專業單車銷售與維修服務">
+  <meta property="og:description" content="國民旅遊卡特約商店，提供全車健檢保養、公路車、電輔車專業諮詢與線上預約服務。">
+  
   <link rel="stylesheet" href="./css/style.css">
+  
+  <style>
+    /* 首頁主視覺英雄區 (Hero Section) */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      color: white;
+      text-align: center;
+      padding: 3.5rem 1rem;
+      border-radius: var(--radius);
+      margin-bottom: 2.5rem;
+      border-bottom: 6px solid var(--accent-yellow);
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.8rem;
+      color: #ffffff;
+    }
+    .hero h1 span {
+      color: var(--accent-yellow);
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: #cbd5e1;
+      margin-bottom: 1.8rem;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background-color: var(--accent-red);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background-color: var(--accent-red-hover); }
+    
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--accent-yellow);
+      border: 2px solid var(--accent-yellow);
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background-color: var(--accent-yellow);
+      color: var(--primary-blue);
+    }
+
+    /* 門市四大特色標籤 */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .feature-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      text-align: center;
+      border: 2px solid var(--brand-blue);
+      box-shadow: var(--shadow);
+    }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .feature-title {
+      font-size: 1.1rem;
+      color: var(--primary-blue);
+      margin-bottom: 0.3rem;
+    }
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
 <body>
 
   <main class="container">
+    <!-- 主視覺區塊 -->
     <section class="hero">
-      <h1 id="hero-title">載入中...</h1>
-      <p id="hero-sub" style="color: #64748b; margin-top: 0.5rem;"></p>
+      <h1>捷安特富國店 <span>專業售後與維修</span></h1>
+      <p>國民旅遊卡特約商店｜公路車、登山車、電輔車專業保養與客製化調整</p>
+      <div class="hero-btns">
+        <a href="contact.html" class="btn-primary">🔴 線上預約維修 / 試乘</a>
+        <a href="products.html" class="btn-secondary">🚴‍♂️ 瀏覽精選車款</a>
+      </div>
     </section>
 
-    <section>
-      <h2 style="margin-bottom: 1rem; color: #0f172a;">門市核心服務</h2>
-      <div id="feature-container" class="features">
-        <p>服務內容載入中...</p>
+    <!-- 四大核心特色 -->
+    <section class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <h3 class="feature-title">國旅卡特約商店</h3>
+        <p class="feature-desc">支援國民旅遊卡刷卡消費與各類專案優惠</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛠️</div>
+        <h3 class="feature-title">原廠全車健檢</h3>
+        <p class="feature-desc">提供傳動系統深層清洗、變速與煞車精細微調</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">電輔車專業維修</h3>
+        <p class="feature-desc">智慧電力系統檢測、電池保養與零組件升級</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3 class="feature-title">精準 Riding Fitting</h3>
+        <p class="feature-desc">依個人騎乘習慣調整騎姿，打造最舒適的騎乘體驗</p>
       </div>
     </section>
   </main>
 
   <script src="./js/header.js"></script>
-  <script src="./js/main.js"></script>
 </body>
 </html>
