@@ -1,0 +1,38 @@
+[
+  {
+    "id": "p1",
+    "name": "Fuguo Speed 700C 輕量化公路車",
+    "category": "road",
+    "categoryName": "公路車",
+    "price": "NT$ 18,500",
+    "desc": "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
+    "image": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=500&auto=format&fit=crop&q=60"
+  },
+  {
+    "id": "p2",
+    "name": "Fuguo Mountain X2 雙碟煞登山車",
+    "category": "mountain",
+    "categoryName": "登山車",
+    "price": "NT$ 15,200",
+    "desc": "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應對林道與崎嶇路面。",
+    "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&auto=format&fit=crop&q=60"
+  },
+  {
+    "id": "p3",
+    "name": "Fuguo City Classic 復古通勤車",
+    "category": "city",
+    "categoryName": "通勤車",
+    "price": "NT$ 6,800",
+    "desc": "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
+    "image": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=500&auto=format&fit=crop&q=60"
+  },
+  {
+    "id": "p4",
+    "name": "Fuguo E-Bike 智慧助力電動輔助車",
+    "category": "ebike",
+    "categoryName": "電輔車",
+    "price": "NT$ 32,000",
+    "desc": "高效能鋰電池提供 60 公里續航力，爬坡輕鬆不費力。",
+    "image": "https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=500&auto=format&fit=crop&q=60"
+  }
+]
