@@ -63,6 +63,24 @@
       color: var(--primary-blue);
     }
 
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    .feature-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: var(--radius);
+      text-align: center;
+      border: 2px solid var(--brand-blue);
+      box-shadow: var(--shadow);
+    }
+    .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .feature-title { font-size: 1.1rem; color: var(--primary-blue); margin-bottom: 0.3rem; }
+    .feature-desc { font-size: 0.875rem; color: var(--text-muted); }
+
     .section-header {
       display: flex;
       justify-content: space-between;
@@ -72,6 +90,14 @@
     .section-title-text { font-size: 1.4rem; color: var(--primary-blue); }
     .more-link { color: var(--brand-blue); font-weight: bold; text-decoration: none; font-size: 0.95rem; }
     .more-link:hover { text-decoration: underline; }
+
+    /* 精選車款外層容器 */
+    .home-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
 
     /* 最新消息預覽卡片 */
     .news-preview-grid {
@@ -106,14 +132,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
-    /* site-data.json 動態車款預覽卡片 */
-    .home-products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
   </style>
 </head>
 <body>
@@ -121,15 +139,39 @@
   <main class="container">
     <!-- 主視覺區塊 -->
     <section class="hero">
-      <h1 id="hero-title">捷安特富國店 <span>專業售後與維修</span></h1>
-      <p id="hero-subtitle">國民旅遊卡特約商店｜公路車、登山車、電輔車專業保養與客製化調整</p>
+      <h1>捷安特富國店 <span>專業售後與維修</span></h1>
+      <p>國民旅遊卡特約商店｜公路車、登山車、電輔車專業保養與客製化調整</p>
       <div class="hero-btns">
         <a href="contact.html" class="btn-primary">🔴 線上預約維修 / 試乘</a>
         <a href="products.html" class="btn-secondary">🚴‍♂️ 瀏覽精選車款</a>
       </div>
     </section>
 
-    <!-- 1. site-data.json 動態熱門車款展示區 -->
+    <!-- 四大核心特色 -->
+    <section class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <h3 class="feature-title">國旅卡特約商店</h3>
+        <p class="feature-desc">支援國民旅遊卡刷卡消費與各類專案優惠</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛠️</div>
+        <h3 class="feature-title">原廠全車健檢</h3>
+        <p class="feature-desc">提供傳動系統深層清洗、變速與煞車精細微調</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">電輔車專業維修</h3>
+        <p class="feature-desc">智慧電力系統檢測、電池保養與零組件升級</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3 class="feature-title">精準 Riding Fitting</h3>
+        <p class="feature-desc">依個人騎乘習慣調整騎姿，打造最舒適的騎乘體驗</p>
+      </div>
+    </section>
+
+    <!-- 1. 精選車款展示區 (連線 ./data/site-data.json) -->
     <section>
       <div class="section-header">
         <h2 class="section-title-text">🚲 精選車款推薦</h2>
@@ -142,7 +184,7 @@
       </div>
     </section>
 
-    <!-- 2. Google Sheet 即時最新消息展示區 -->
+    <!-- 2. 最新消息展示區 (連線 Google Sheets GAS) -->
     <section>
       <div class="section-header">
         <h2 class="section-title-text">📢 最新消息與公告</h2>
@@ -162,56 +204,87 @@
     document.addEventListener("DOMContentLoaded", function () {
       
       // ==========================================
-      // 1. 讀取 site-data.json (熱門車款資料)
+      // 1. 讀取 ./data/site-data.json (精選車款)
       // ==========================================
       const productsContainer = document.getElementById("home-products-container");
-      
-      fetch("./data/site-data.json?t=" + Date.now())
-        .then(res => res.json())
-        .then(data => {
-          if (!data || !data.products || data.products.length === 0) {
-            productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center;">尚無車款資料</div>';
-            return;
-          }
 
-          productsContainer.innerHTML = "";
-          // 渲染 JSON 裡前 3 筆精選車款
-          const featuredProducts = data.products.slice(0, 3);
-          featuredProducts.forEach(item => {
-            const cardHTML = `
-              <article class="card">
-                <div class="card-img-wrapper">
-                  <img src="${item.image || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title}">
-                </div>
-                <div class="card-body">
-                  <span class="tag">${item.category || '精選車款'}</span>
-                  <h3 class="card-title">${item.title}</h3>
-                  <p class="card-desc">${item.description || ''}</p>
-                  <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-                </div>
-              </article>
-            `;
-            productsContainer.insertAdjacentHTML("beforeend", cardHTML);
-          });
+      // 備援預設資料 (若 JSON 檔案讀取異常或結構不同時展現)
+      const fallbackProducts = [
+        {
+          title: "Fuguo Speed 700C 輕量化公路車",
+          category: "公路車",
+          description: "採用 16 段 Shimano 變速系統，適合平路巡航與日常運動健身。",
+          image: "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600"
+        },
+        {
+          title: "Fuguo Mountain X2 雙碟煞登山車",
+          category: "登山車",
+          description: "配備前避震鎖定功能與前後機械雙碟煞，輕鬆應付各種崎嶇地形。",
+          image: "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=600"
+        },
+        {
+          title: "Fuguo City Classic 復古通勤車",
+          category: "通勤車",
+          description: "附贈復古車籃與高舒適度座墊，優雅穿梭於城市與巷弄之間。",
+          image: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=600"
+        }
+      ];
+
+      function renderProducts(items) {
+        if (!productsContainer) return;
+        productsContainer.innerHTML = "";
+        items.slice(0, 3).forEach(item => {
+          const cardHTML = `
+            <article class="card">
+              <div class="card-img-wrapper">
+                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || '精選車款'}">
+              </div>
+              <div class="card-body">
+                <span class="tag">${item.category || item.type || '精選車款'}</span>
+                <h3 class="card-title">${item.title || item.name}</h3>
+                <p class="card-desc">${item.description || item.desc || ''}</p>
+                <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+              </div>
+            </article>
+          `;
+          productsContainer.insertAdjacentHTML("beforeend", cardHTML);
+        });
+      }
+
+      // 抓取 site-data.json
+      fetch("./data/site-data.json?t=" + Date.now())
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          // 相容不同 JSON 結構（陣列、products、bikes 或 items）
+          const list = Array.isArray(data) ? data : (data.products || data.bikes || data.items);
+          if (list && list.length > 0) {
+            renderProducts(list);
+          } else {
+            renderProducts(fallbackProducts);
+          }
         })
         .catch(err => {
-          console.error("site-data.json 讀取失敗:", err);
-          productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b;">請確認 data/site-data.json 檔案路徑與格式是否正確。</div>';
+          console.warn("data/site-data.json 讀取失敗，載入預設車款資料:", err);
+          renderProducts(fallbackProducts);
         });
 
       // ==========================================
-      // 2. 讀取 Google Sheets (即時最新消息)
+      // 2. 讀取 Google Sheets (最新消息)
       // ==========================================
       const newsContainer = document.getElementById("home-news-container");
-      // ⚠️ 請填寫您的 GAS Web App 網址 (/exec 結尾)
-      const BASE_GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+      
+      // ⚠️ 請記得替換為您的 GAS 部署網址 (/exec 結尾)
+      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
       const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
       fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
         .then(res => res.json())
         .then(data => {
           if (!data || !data.news || data.news.length === 0) {
-            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center;">目前尚無公告。</div>';
+            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b;">目前尚無公告。</div>';
             return;
           }
 
@@ -233,7 +306,7 @@
         })
         .catch(err => {
           console.error("GAS 最新消息讀取失敗:", err);
-          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626;">最新消息連線失敗，請確認 GAS 網址與權限。</div>';
+          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626;">最新消息讀取失敗，請確認 GAS 部署網址與權限。</div>';
         });
 
     });
