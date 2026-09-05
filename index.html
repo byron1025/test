@@ -3,26 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 官方網站</title>
-  <link rel="stylesheet" href="./css/style.css">
+  <title>富國腳踏車店 - 最新消息</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
   <main class="container">
-    <section class="hero">
-      <h1 id="hero-title">載入中...</h1>
-      <p id="hero-sub" style="color: #64748b; margin-top: 0.5rem;"></p>
-    </section>
-
-    <section>
-      <h2 style="margin-bottom: 1rem; color: #0f172a;">門市核心服務</h2>
-      <div id="feature-container" class="features">
-        <p>服務內容載入中...</p>
-      </div>
-    </section>
+    <h1 style="text-align: center; margin-bottom: 1.5rem;">📢 最新消息與公告</h1>
+    <div id="news-container">⏳ 最新消息載入中...</div>
   </main>
 
-  <script src="./js/header.js"></script>
-  <script src="./js/main.js"></script>
+  <script src="../js/header.js"></script>
+  <script>
+    // ⚠️ 請替換為您 GAS 部署後發佈的 Web App 網址 (結尾必須是 /exec)
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec";
+
+    function handleNewsData(data) {
+      const container = document.getElementById('news-container');
+      if (!container) return;
+
+      if (!data || data.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>目前尚無最新消息。</p>";
+        return;
+      }
+
+      container.innerHTML = data.map(item => `
+        <div class="news-card">
+          <span style="color: #0284c7; font-weight: bold; font-size: 0.9rem;">${item.date || ''}</span>
+          <h3 style="margin: 5px 0; color: #1e293b;">${item.title || ''}</h3>
+          <p style="color: #475569; margin: 0; line-height: 1.5;">${item.content || ''}</p>
+        </div>
+      `).join('');
+    }
+
+    function fetchNews() {
+      const script = document.createElement('script');
+      script.src = `${GAS_URL}?callback=handleNewsData`;
+      script.onerror = function() {
+        document.getElementById('news-container').innerHTML = 
+          "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請確認 GAS 部署權限設定。</p>";
+      };
+      document.body.appendChild(script);
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchNews);
+  </script>
 </body>
 </html>
