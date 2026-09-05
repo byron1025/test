@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>富國腳踏車店 - 門市與維修預約</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <!-- ⚠️ 關鍵 1：確認 CSS 引入路徑正確 -->
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 
   <main class="container">
-    <h1 style="text-align: center; margin-bottom: 1.5rem;">📍 門市資訊與線上預約</h1>
+    <h1 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a;">📍 門市資訊與線上預約</h1>
 
     <div class="features" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-      <!-- 門市資訊 -->
+      <!-- 門市資訊卡片 -->
       <div class="card">
         <h3 style="color: #0284c7; margin-bottom: 1rem;">聯絡資訊</h3>
         <p><strong>📞 電話：</strong> (02) 2345-6789</p>
@@ -20,7 +21,7 @@
         <p style="margin-top: 0.5rem;"><strong>📍 店址：</strong> 台北市中山區富國路 123 號</p>
       </div>
 
-      <!-- 線上簡約服務諮詢 -->
+      <!-- 線上預約表單卡片 -->
       <div class="card">
         <h3 style="color: #0284c7; margin-bottom: 1rem;">線上預約維修 / 保養</h3>
         <form onsubmit="alert('預約成功！我們將會盡快與您聯繫。'); return false;">
@@ -47,6 +48,7 @@
     </div>
   </main>
 
-  <script src="../js/header.js"></script>
+  <!-- ⚠️ 關鍵 2：確認 JS 引入路徑正確 (會自動插入頂部選單與頁尾) -->
+  <script src="./js/header.js"></script>
 </body>
 </html>
