@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <!-- 左側：品牌 Logo + 社群圖示按鈕 -->
         <div class="header-left">
           <a href="index.html" class="brand-logo">
-            🚴‍♂️ 捷安特富國自行車店
+            🚴‍♂️ 富國腳踏車店
           </a>
 
           <!-- 社群與商家地圖連結 -->
