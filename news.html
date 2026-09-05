@@ -73,54 +73,54 @@
     <footer class="footer">© 2026 富國腳踏車店 All Rights Reserved.</footer>
   </div>
 
-  <script>
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby7f3T8UG9KklaH685wzHKoAfXlP_vzRLfao83uYWRMyx_HGMtfGke0ES09r3r06j3i/exec";
+ <script>
+  // ⚠️ 請確保網址結尾是 /exec，且開頭是 https://
+  const GAS_NEWS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-    // JSONP Callback Handler
-    function renderNews(data) {
-      document.getElementById('loading').style.display = 'none';
-      const newsContainer = document.getElementById('news-list');
+  function loadNews() {
+    const container = document.getElementById('news-container');
+    if (container) container.innerText = "⏳ 最新消息載入中...";
 
-      if (!data || data.length === 0) {
-        newsContainer.innerHTML = '<p style="text-align:center; color:#94a3b8;">目前尚無公告消息。</p>';
-        return;
+    // 關鍵修正：加上 redirect: 'follow' 讓手機瀏覽器允許 Google 的轉址
+    fetch(GAS_NEWS_URL, {
+      method: 'GET',
+      redirect: 'follow'
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('網路回應不成功');
       }
+      return response.json();
+    })
+    .then(data => {
+      renderNews(data);
+    })
+    .catch(error => {
+      console.error("手機抓取失敗原因：", error);
+      if (container) {
+        container.innerHTML = `<p style="color:red;">❌ 資料載入失敗，請重新整理頁面。<br><small>(${error.message})</small></p>`;
+      }
+    });
+  }
 
-      // Display most recent announcements first
-      data.reverse().forEach(item => {
-        let formattedDate = item.日期 || '';
-        if (formattedDate) {
-          const d = new Date(formattedDate);
-          if (!isNaN(d.getTime())) {
-            formattedDate = d.toISOString().split('T')[0];
-          }
-        }
-
-        const card = document.createElement('div');
-        card.className = 'news-card';
-        card.innerHTML = `
-          <div class="news-meta">
-            <span class="news-tag">${item.標籤 || '最新公告'}</span>
-            <span class="news-date">📅 ${formattedDate}</span>
-          </div>
-          <div class="news-title">${item.標題 || ''}</div>
-          <div class="news-content">${item.內容 || ''}</div>
-        `;
-        newsContainer.appendChild(card);
-      });
+  function renderNews(items) {
+    const container = document.getElementById('news-container');
+    if (!items || items.length === 0) {
+      container.innerHTML = "<p>目前尚無最新消息。</p>";
+      return;
     }
 
-    // Fetch data using script tag (JSONP cross-origin request)
-    function fetchNews() {
-      const script = document.createElement('script');
-      script.src = `${GAS_API_URL}?callback=renderNews`;
-      script.onerror = function() {
-        document.getElementById('loading').innerHTML = '❌ 最新消息載入失敗，請確認 Apps Script 部署設定或稍後再試。';
-      };
-      document.body.appendChild(script);
-    }
+    container.innerHTML = items.map(item => `
+      <div class="news-card" style="border-bottom: 1px solid #e2e8f0; padding: 15px 0;">
+        <span class="news-date" style="color: #0284c7; font-weight: bold;">${item.date || ''}</span>
+        <h3 class="news-title" style="margin: 5px 0;">${item.title || ''}</h3>
+        <p class="news-content" style="color: #475569; margin: 0;">${item.content || ''}</p>
+      </div>
+    `).join('');
+  }
 
-    fetchNews();
-  </script>
+  // 頁面載入完成後執行
+  document.addEventListener("DOMContentLoaded", loadNews);
+</script>
 </body>
 </html>
