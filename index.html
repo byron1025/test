@@ -274,7 +274,7 @@
       const newsContainer = document.getElementById("home-news-container");
       
       // ⚠️ 請記得替換為您的 GAS 部署網址 (/exec 結尾)
-      const BASE_GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
       const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
       fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
