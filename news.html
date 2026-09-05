@@ -3,57 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>最新消息</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      background-color: #f8fafc;
-      color: #334155;
-    }
-    h1 {
-      text-align: center;
-      color: #0f172a;
-    }
-    #news-container {
-      margin-top: 20px;
-    }
-    .news-card {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .news-date {
-      color: #0284c7;
-      font-size: 0.9rem;
-      font-weight: bold;
-    }
-    .news-title {
-      margin: 6px 0;
-      font-size: 1.25rem;
-      color: #1e293b;
-    }
-    .news-content {
-      margin: 0;
-      color: #475569;
-      line-height: 1.6;
-    }
-  </style>
+  <title>富國腳踏車店 - 最新消息</title>
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 
-  <h1>📢 最新消息</h1>
-  <div id="news-container">⏳ 最新消息載入中...</div>
+  <main class="container">
+    <h1 style="text-align: center; margin-bottom: 1.5rem; color: #0f172a;">📢 最新消息與公告</h1>
+    <div id="news-container">⏳ 最新消息載入中...</div>
+  </main>
+
+  <script src="./js/header.js"></script>
 
   <script>
     // ⚠️ 請替換為您部署後發佈的 Web App 網址 (結尾必須是 /exec)
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbzbpSh2Nv5vClTSdZhPyG5IsQlQcuxRKmwbyy5FnpZa2ICyp4A-o3P-zB5gaIA3N_FX/exec";
+    const GAS_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
 
-    // JSONP 回調函數：接收資料並渲染畫面
     function handleNewsData(data) {
       const container = document.getElementById('news-container');
       if (!container) return;
@@ -65,22 +30,19 @@
 
       container.innerHTML = data.map(item => `
         <div class="news-card">
-          <span class="news-date">${item.date || ''}</span>
-          <h3 class="news-title">${item.title || ''}</h3>
-          <p class="news-content">${item.content || ''}</p>
+          <span style="color: #0284c7; font-weight: bold; font-size: 0.9rem;">${item.date || ''}</span>
+          <h3 style="margin: 5px 0; color: #1e293b;">${item.title || ''}</h3>
+          <p style="color: #475569; margin: 0; line-height: 1.5;">${item.content || ''}</p>
         </div>
       `).join('');
     }
 
-    // 發送 JSONP 請求 (徹底解決跨網域 CORS 問題)
     function fetchNews() {
       const script = document.createElement('script');
       script.src = `${GAS_URL}?callback=handleNewsData`;
       script.onerror = function() {
-        const container = document.getElementById('news-container');
-        if (container) {
-          container.innerHTML = "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請確認網路連線或 GAS 網址設定。</p>";
-        }
+        document.getElementById('news-container').innerHTML = 
+          "<p style='color:red; text-align:center;'>❌ 消息載入失敗，請確認 GAS 網址或部署權限設定。</p>";
       };
       document.body.appendChild(script);
     }
