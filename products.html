@@ -3,79 +3,76 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>富國腳踏車店 - 精選車款</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'PingFang TC', 'Noto Sans TC', sans-serif; background-color: #0f172a; color: #f8fafc; line-height: 1.6; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 20px 40px; }
-    .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #1e293b; }
-    .logo { font-size: 1.5rem; font-weight: bold; color: #38bdf8; text-decoration: none; }
-    .nav-links a { color: #94a3b8; text-decoration: none; margin-left: 20px; transition: 0.3s; }
-    .nav-links a:hover, .nav-links a.active { color: #38bdf8; font-weight: bold; }
-    .filter-buttons { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
-    .filter-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 8px 18px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-    .filter-btn.active, .filter-btn:hover { background: #38bdf8; color: #0f172a; font-weight: bold; }
-    .grid { display: flex; gap: 20px; flex-wrap: wrap; }
-    .card { flex: 1; min-width: 250px; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; text-align: center; }
-    .card-icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .card-title { font-size: 1.2rem; font-weight: bold; color: #f8fafc; margin-bottom: 8px; }
-    .card-price { color: #38bdf8; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; }
-    .card-desc { font-size: 0.9rem; color: #94a3b8; }
-    .footer { border-top: 1px solid #1e293b; padding-top: 20px; text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 60px; }
-  </style>
+  <title>富國腳踏車店 - 車款與商品目錄</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-  <div class="container">
-    <nav class="nav">
-      <a href="index.html" class="logo">🚲 富國腳踏車店</a>
-      <div class="nav-links">
-        <a href="index.html">關於我們</a>
-        <a href="services.html">服務與試算</a>
-        <a href="products.html" class="active">精選車款</a>
-        <a href="contact.html">門市資訊</a>
-      </div>
-    </nav>
 
-    <h2 style="text-align: center; margin-top: 40px; color: #38bdf8;">🚲 熱門精選車款 (JSON 數據渲染)</h2>
-    
-    <div class="filter-buttons">
-      <button class="filter-btn active" onclick="filterBikes('all', this)">全部車款</button>
-      <button class="filter-btn" onclick="filterBikes('road', this)">公路車</button>
-      <button class="filter-btn" onclick="filterBikes('mtb', this)">登山車</button>
-      <button class="filter-btn" onclick="filterBikes('e-bike', this)">電輔車</button>
+  <main class="container">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="color: #0f172a; font-size: 2rem;">精選車款與目錄</h1>
+      <p style="color: #64748b; margin-top: 0.5rem;">歡迎親臨門市試乘與諮詢</p>
     </div>
 
-    <div id="bike-list" class="grid"></div>
+    <!-- 分類篩選 -->
+    <div class="filter-container">
+      <button class="filter-btn active" onclick="filterProducts('all', this)">全部車種</button>
+      <button class="filter-btn" onclick="filterProducts('road', this)">公路車</button>
+      <button class="filter-btn" onclick="filterProducts('mountain', this)">登山車</button>
+      <button class="filter-btn" onclick="filterProducts('city', this)">通勤車</button>
+      <button class="filter-btn" onclick="filterProducts('ebike', this)">電輔車</button>
+    </div>
 
-    <footer class="footer">© 2026 富國腳踏車店 All Rights Reserved.</footer>
-  </div>
+    <div id="product-list" class="product-grid">
+      <p style="text-align: center; grid-column: 1/-1;">車款載入中...</p>
+    </div>
+  </main>
 
+  <script src="../js/header.js"></script>
   <script>
-    const bikeData = [
-      { name: "富國 Aerodynamics C1", category: "road", price: "$42,000", icon: "🚴", desc: "極速碳纖維公路車，專為長途巡航與爬坡設計。" },
-      { name: "富國 Endurance R2", category: "road", price: "$28,500", icon: "🚴‍♂️", desc: "舒適型公路車，吸震幾何設定，適合長途騎乘。" },
-      { name: "富國 Trail Mountain X", category: "mtb", price: "$32,000", icon: "🚵", desc: "高強度油壓避震，輕鬆應付林道與崎嶇路況。" },
-      { name: "富國 City E-Motion", category: "e-bike", price: "$38,000", icon: "🛴", desc: "高效鋰電池電輔車，續航高達 80 公里，都市通勤首選。" }
-    ];
+    let allProducts = [];
 
-    function renderBikes(data) {
-      document.getElementById('bike-list').innerHTML = data.map(bike => `
-        <div class="card">
-          <div class="card-icon">${bike.icon}</div>
-          <div class="card-title">${bike.name}</div>
-          <div class="card-price">${bike.price}</div>
-          <div class="card-desc">${bike.desc}</div>
+    function loadProducts() {
+      fetch('../data/products.json')
+        .then(res => res.json())
+        .then(data => {
+          allProducts = data;
+          renderProducts(allProducts);
+        });
+    }
+
+    function renderProducts(products) {
+      const container = document.getElementById('product-list');
+      if (products.length === 0) {
+        container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">無此分類車款。</p>';
+        return;
+      }
+
+      container.innerHTML = products.map(item => `
+        <div class="product-card">
+          <img src="${item.image}" alt="${item.name}" class="product-img" loading="lazy">
+          <div class="product-body">
+            <span class="product-tag">${item.categoryName}</span>
+            <h3 style="font-size: 1.1rem; color: #0f172a; margin-bottom: 6px;">${item.name}</h3>
+            <p style="font-size: 0.875rem; color: #64748b; flex-grow: 1;">${item.desc}</p>
+            <div class="product-price">${item.price}</div>
+          </div>
         </div>
       `).join('');
     }
 
-    function filterBikes(category, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderBikes(category === 'all' ? bikeData : bikeData.filter(i => i.category === category));
+    function filterProducts(category, btnElement) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnElement) btnElement.classList.add('active');
+
+      if (category === 'all') {
+        renderProducts(allProducts);
+      } else {
+        renderProducts(allProducts.filter(item => item.category === category));
+      }
     }
 
-    renderBikes(bikeData);
+    document.addEventListener("DOMContentLoaded", loadProducts);
   </script>
 </body>
 </html>
