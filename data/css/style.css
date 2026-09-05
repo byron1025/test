@@ -159,3 +159,7 @@ footer {
   object-fit: cover; /* 自動填滿並裁切多餘邊緣 */
   border-radius: 6px;
 }
+.card-img-container {
+  background-color: #ffffff; /* 強制白底 */
+  padding: 10px;
+}
