@@ -60,8 +60,8 @@
 
   <script src="./js/header.js"></script>
 
-  <script>
-    // ⚠️ 請填入步驟 1 取得的 Google Apps Script Web App 網址
+ <script>
+    // ⚠️ 請替換為你 GAS 部署的 Web App 網址 (/exec 結尾)
     const GAS_BOOKING_URL = "https://script.google.com/macros/s/AKfycbzgGeMgSS64GDWGKKwZFMbAY1WBUfcSvToe4LZ8TPZoHBtEe4nvj5cWfoO-F6m166-wAw/exec";
 
     function submitBooking(event) {
@@ -71,24 +71,24 @@
       btn.disabled = true;
       btn.textContent = "資料傳送中...";
 
-      const payload = {
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        service: document.getElementById('service').value
-      };
+      // 將資料打包成表單格式，避免被 Google 擋跨域
+      const formData = new URLSearchParams();
+      formData.append('name', document.getElementById('name').value);
+      formData.append('phone', document.getElementById('phone').value);
+      formData.append('service', document.getElementById('service').value);
 
       fetch(GAS_BOOKING_URL, {
         method: 'POST',
-        mode: 'no-cors', // 避免跨域阻擋
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formData.toString()
       })
       .then(() => {
-        alert('🎉 預約資料已成功送出！我們將會盡快與您聯繫。');
+        alert('🎉 預約資料已成功送出！');
         document.getElementById('booking-form').reset();
       })
       .catch(err => {
-        alert('❌ 傳送失敗，請直接來電預約。');
+        alert('❌ 傳送失敗，請稍後再試。');
         console.error(err);
       })
       .finally(() => {
@@ -97,6 +97,5 @@
       });
     }
   </script>
-
 </body>
 </html>
