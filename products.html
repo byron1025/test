@@ -53,16 +53,16 @@
 
         productContainer.innerHTML = "";
         products.forEach(item => {
-          const categoryName = item.category || '精選車款';
+          const categoryName = item.category || item.type || '精選車款';
           const cardHTML = `
             <article class="card" data-category="${categoryName}">
               <div class="card-img-wrapper">
-                <img src="${item.image || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || '精選車款'}">
+                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || item.name || '精選車款'}">
               </div>
               <div class="card-body">
                 <span class="tag">${categoryName}</span>
-                <h3 class="card-title">${item.title || ''}</h3>
-                <p class="card-desc">${item.description || ''}</p>
+                <h3 class="card-title">${item.title || item.name || ''}</h3>
+                <p class="card-desc">${item.description || item.desc || ''}</p>
                 <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
               </div>
             </article>
@@ -87,7 +87,10 @@
             if (selectedCategory === 'all') {
               renderProducts(allProducts);
             } else {
-              const filtered = allProducts.filter(item => item.category === selectedCategory);
+              const filtered = allProducts.filter(item => {
+                const cat = item.category || item.type;
+                return cat === selectedCategory;
+              });
               renderProducts(filtered);
             }
           });
@@ -101,12 +104,28 @@
           return res.json();
         })
         .then(data => {
-          const list = Array.isArray(data) ? data : (data.products || []);
-          setupFilter(list);
+          // 自動相容解析：支援 陣列、data.products、data.bikes、data.items
+          let list = [];
+          if (Array.isArray(data)) {
+            list = data;
+          } else if (data && typeof data === 'object') {
+            list = data.products || data.bikes || data.items || [];
+          }
+          
+          if (list.length > 0) {
+            setupFilter(list);
+          } else {
+            productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">JSON 檔案讀取成功，但裡面沒有找到車款資料陣列。</div>';
+          }
         })
         .catch(err => {
           console.error("data/site-data.json 讀取失敗:", err);
-          productContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">無法載入車款資料，請確認 ./data/site-data.json 檔案路徑與格式。</div>';
+          productContainer.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">
+              <p style="font-weight: bold; font-size: 1.1rem; margin-bottom: 0.5rem;">⚠️ 無法載入車款資料</p>
+              <p style="font-size: 0.9rem; color: #64748b;">請確認專案資料夾中是否有 <code>data/site-data.json</code> 檔案，且格式符合標準 JSON 規範。</p>
+            </div>
+          `;
         });
 
     });
