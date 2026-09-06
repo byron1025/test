@@ -1,30 +1,31 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const isSubFolder = window.location.pathname.includes("/pages/");
-  const jsonPath = isSubFolder ? "../data/site-data.json" : "./data/site-data.json";
+  const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwrzmyOBpf3GHooeExrj_3DJKRx5fPeQ9uuGA7Ro0qmIzj0OxdTzzCVkXk5czyHlVVG/exec";
 
-  fetch(jsonPath)
-    .then(res => res.json())
-    .then(data => {
-      if (document.getElementById("site-logo")) {
-        document.getElementById("site-logo").innerText = data.siteName;
-      }
+  // 1. 載入首頁最新消息
+  const newsContainer = document.getElementById("news-container");
+  if (newsContainer) {
+    fetch(BASE_GAS_URL + "?v=" + Date.now())
+      .then(res => res.json())
+      .then(data => {
+        const newsList = data.news || [];
+        if (newsList.length === 0) {
+          newsContainer.innerHTML = '<p class="text-center text-muted">目前暫無公告消息。</p>';
+          return;
+        }
 
-      const heroTitle = document.getElementById("hero-title");
-      const heroSub = document.getElementById("hero-sub");
-      if (heroTitle && data.home) {
-        heroTitle.innerText = data.home.bannerTitle;
-        heroSub.innerText = data.home.bannerSub;
-      }
-
-      const featureContainer = document.getElementById("feature-container");
-      if (featureContainer && data.home && data.home.features) {
-        featureContainer.innerHTML = data.home.features.map(item => `
-          <div class="card">
-            <h3 style="color: #0284c7;">${item.title}</h3>
-            <p style="margin-top: 0.5rem; color: #475569;">${item.desc}</p>
+        newsContainer.innerHTML = newsList.map(item => `
+          <div class="news-card">
+            <div class="news-header">
+              <span class="tag">${item.category}</span>
+              <span class="date">${item.date}</span>
+            </div>
+            <h3 class="news-title">${item.title}</h3>
+            <p class="news-content">${item.content}</p>
           </div>
         `).join('');
-      }
-    })
-    .catch(err => console.error("JSON 載入失敗：", err));
+      })
+      .catch(err => {
+        console.error("最新消息載入錯誤:", err);
+      });
+  }
 });
