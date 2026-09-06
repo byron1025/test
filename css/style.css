@@ -1,6 +1,7 @@
 /* ==========================================
-   捷安特富國自行車店 - 全站整合樣式
-   藍天 (#0099ff) | 太陽黃 (#ffcc00) | 綠地 (#16a34a) | 白雲 (#ffffff)
+   捷安特富國自行車店 - 全站整合與防跑版樣式
+   主色調：藍天 (#0288d1) | 白雲 (#ffffff)
+   點綴色：綠地 (#2e7d32) | 太陽黃 (#fbc02d)
    ========================================== */
 
 /* 1. 全域重置與基礎樣式 */
@@ -14,7 +15,9 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   line-height: 1.8;
   color: #2c3e50;
-  background-color: #f4fbf7; /* 淡清新白綠底色 */
+  /* 淡綠地與淡藍天交織的柔和淡色背景 */
+  background: linear-gradient(180deg, #f0f7f4 0%, #eef6fb 100%);
+  min-height: 100vh;
 }
 
 a {
@@ -22,22 +25,23 @@ a {
   color: inherit;
 }
 
+/* 核心修復：強制所有圖片不超出父容器且保持比例 */
 img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-/* 2. 頂部導覽列 Header */
-.site-header {
-  background: linear-gradient(135deg, #0088cc 0%, #0055a5 100%);
+/* 2. 頂部導覽列 Header (藍天 + 太陽黃底邊) */
+.site-header, header.site-header, header {
+  background: linear-gradient(135deg, #0288d1 0%, #039be5 100%);
   color: #ffffff;
   padding: 15px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(0, 136, 204, 0.25);
-  border-bottom: 4px solid #ffcc00;
+  box-shadow: 0 4px 15px rgba(2, 136, 209, 0.2);
+  border-bottom: 4px solid #fbc02d; /* 太陽黃 */
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -53,29 +57,29 @@ img {
 }
 
 .brand-logo span {
-  color: #ffcc00;
+  color: #fbc02d;
 }
 
 .nav-links {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   align-items: center;
 }
 
 .nav-links a {
   color: #ffffff;
   font-weight: 600;
-  padding: 8px 16px;
+  padding: 8px 18px;
   border-radius: 20px;
   transition: all 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-  background-color: #ffcc00;
-  color: #003366;
+  background-color: #fbc02d; /* 太陽黃 */
+  color: #1b5e20; /* 濃綠字 */
   font-weight: 800;
-  box-shadow: 0 3px 8px rgba(255, 204, 0, 0.4);
+  box-shadow: 0 3px 8px rgba(251, 192, 45, 0.4);
 }
 
 .header-socials {
@@ -89,143 +93,156 @@ img {
   align-items: center;
   width: 34px;
   height: 34px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   color: #ffffff;
   font-weight: bold;
 }
 
-/* 3. 版面通用容器 */
-.container, .about-wrapper {
+/* 3. 版面通用容器與英雄 Banner */
+.container, .about-wrapper, main {
   max-width: 1200px;
   margin: 30px auto;
   padding: 0 20px;
 }
 
-/* 4. 首頁精選車款 / 商品卡片修正 (解決圖片與文字跑版) */
-.product-grid, .grid, .card-grid {
+.hero-banner, .about-hero, section.hero {
+  text-align: center;
+  background: linear-gradient(135deg, #0288d1 0%, #29b6f6 100%);
+  color: #ffffff;
+  padding: 50px 20px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 20px rgba(3, 155, 229, 0.15);
+  border-bottom: 6px solid #fbc02d;
+}
+
+.giant-badge, .badge, .badge-yellow {
+  display: inline-block;
+  background-color: #fbc02d;
+  color: #1b5e20;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.95em;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(251, 192, 45, 0.3);
+}
+
+.hero-banner h1, .about-hero h1 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.subtitle {
+  color: #e1f5fe;
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* 4. 關鍵修復：商品卡片與圖片專屬固定排版 (防圖片暴走跑版) */
+.product-grid, .grid, .card-grid, section.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
   margin-top: 20px;
 }
 
-.product-card, .card {
-  background: #ffffff;
+.product-card, .card, div.card, article.card {
+  background: #ffffff; /* 白雲卡片 */
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0eef5;
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%; /* 強迫卡片高度一致 */
 }
 
 .product-card:hover, .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(0, 153, 255, 0.15);
-  border-color: #0099ff;
+  box-shadow: 0 12px 25px rgba(2, 136, 209, 0.15);
+  border-color: #29b6f6;
 }
 
-.product-card img, .card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover; /* 鎖定圖片比例不變形 */
-  background-color: #f8fafc;
+/* 核心修復：強制鎖定商品卡片內的圖片尺寸與變形控制 */
+.product-card img, .card img, article.card img, div.card img {
+  width: 100% !important;
+  height: 220px !important;
+  object-fit: cover !important; /* 確保圖片不拉伸變形 */
+  object-position: center !important;
+  background-color: #f4f9fc;
+  border-bottom: 1px solid #f0f7f4;
+  flex-shrink: 0;
 }
 
-.product-content, .card-body {
+.product-content, .card-body, div.card-body {
   padding: 20px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.product-tag {
+.product-tag, .tag {
   display: inline-block;
   font-size: 0.85em;
-  color: #0284c7;
+  color: #2e7d32; /* 綠地綠 */
+  background-color: #e8f5e9;
+  padding: 3px 10px;
+  border-radius: 12px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  width: fit-content;
 }
 
 .product-card h3, .card h3 {
   font-size: 1.2em;
-  color: #0f172a;
+  color: #0288d1; /* 藍天藍 */
   margin-bottom: 10px;
 }
 
 .product-card p, .card p {
-  color: #64748b;
+  color: #546e7a;
   font-size: 0.95em;
   margin-bottom: 15px;
   flex: 1;
 }
 
-/* 5. 英雄 Banner 區塊 (藍天太陽風格) */
-.hero-banner, .about-hero {
-  text-align: center;
-  background: linear-gradient(135deg, #0099ff 0%, #3a7bd5 100%);
-  color: #ffffff;
-  padding: 50px 20px;
-  border-radius: 16px;
-  margin-bottom: 30px;
-  box-shadow: 0 10px 20px rgba(0, 153, 255, 0.2);
-  border-bottom: 6px solid #ffcc00;
-}
-
-.giant-badge, .badge {
-  display: inline-block;
-  background-color: #ffcc00;
-  color: #1a365d;
-  padding: 6px 20px;
-  border-radius: 20px;
-  font-weight: 800;
-  font-size: 0.95em;
-  margin-bottom: 15px;
-}
-
-.hero-banner h1, .about-hero h1 {
-  font-size: 2.2em;
-  margin-bottom: 10px;
-}
-
-.subtitle {
-  color: #e0f2fe;
-  font-size: 1.1em;
-  margin-bottom: 15px;
-}
-
-/* 6. 關於我們 (about.html) 專用樣式 */
-.about-card {
+/* 5. 關於我們與各區塊細節設定 */
+.about-card, .content-box {
   background: #ffffff;
   border-radius: 16px;
   padding: 35px 40px;
   margin-bottom: 30px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0eef5;
 }
 
 .giant-dealer-section {
-  border-left: 6px solid #0099ff;
-  background: linear-gradient(to right, #ffffff, #f0fdf4);
+  border-left: 6px solid #2e7d32;
+  background: linear-gradient(to right, #ffffff, #f1f8e9);
 }
 
 .giant-dealer-section h2 {
-  color: #0284c7;
+  color: #2e7d32;
   margin-bottom: 15px;
+  font-size: 1.4em;
 }
 
 .section-title {
   text-align: center;
-  color: #166534;
+  color: #0288d1;
   font-size: 1.8em;
   margin-bottom: 10px;
 }
 
 .section-desc {
   text-align: center;
-  color: #4b5563;
+  color: #546e7a;
   margin-bottom: 30px;
 }
 
@@ -239,15 +256,15 @@ img {
   background: #ffffff;
   padding: 25px;
   border-radius: 12px;
-  border-top: 4px solid #16a34a;
-  border-right: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
-  border-left: 1px solid #e2e8f0;
+  border-top: 4px solid #2e7d32;
+  border-right: 1px solid #e0eef5;
+  border-bottom: 1px solid #e0eef5;
+  border-left: 1px solid #e0eef5;
 }
 
 .story-card h3 {
-  color: #0369a1;
-  border-bottom: 2px solid #fef08a;
+  color: #0288d1;
+  border-bottom: 2px solid #fbc02d;
   padding-bottom: 10px;
   margin-bottom: 12px;
 }
@@ -262,7 +279,7 @@ img {
   background: #ffffff;
   padding: 25px 20px;
   border-radius: 12px;
-  border: 2px solid #fef08a;
+  border: 2px solid #fff59d;
   text-align: center;
 }
 
@@ -272,21 +289,26 @@ img {
 }
 
 .service-item h4 {
-  color: #0284c7;
+  color: #2e7d32;
   margin-bottom: 8px;
 }
 
-.about-footer-tribute, footer {
+/* 6. 頁尾 Footer */
+.about-footer-tribute, footer, .site-footer {
   text-align: center;
-  margin: 40px 0 20px 0;
-  color: #15803d;
-  font-size: 0.9em;
+  padding: 30px 20px;
+  margin-top: 40px;
+  color: #2e7d32;
+  font-size: 0.95em;
+  border-top: 2px solid #e0eef5;
+  background-color: #ffffff;
 }
 
-/* 📱 響應式微調 */
+/* 📱 手機響應式支援 */
 @media (max-width: 768px) {
   .site-header { flex-direction: column; gap: 15px; }
   .nav-links { flex-wrap: wrap; justify-content: center; }
   .story-grid { grid-template-columns: 1fr; }
-  .product-grid { grid-template-columns: 1fr; }
+  .product-grid, .grid { grid-template-columns: 1fr; }
+  .product-card img, .card img { height: 200px !important; }
 }
