@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>門市公告管理後台 - 捷安特富國店</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    .admin-container {
+      max-width: 700px;
+      margin: 30px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      border-top: 6px solid #0288d1;
+    }
+    .admin-header {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #0288d1;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1e293b;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #0288d1;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.15);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .btn-submit {
+      width: 100%;
+      background: #0288d1;
+      color: #ffffff;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .btn-submit:hover {
+      background: #0277bd;
+    }
+    .btn-submit:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+    #msgAlert {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+      font-weight: bold;
+    }
+    .msg-success { background: #dcfce7; color: #15803d; }
+    .msg-error { background: #fee2e2; color: #b91c1c; }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <div class="admin-container">
+      <div class="admin-header">
+        <h2>🛠️ 門市公告與最新消息發布系統</h2>
+        <p style="color: #64748b; font-size: 0.9em; margin-top: 5px;">填寫完畢後點擊送出，即可自動同步至前台網站</p>
+      </div>
+
+      <form id="newsForm">
+        <!-- 分類與日期 -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">📢 公告類別</label>
+            <select id="category" required>
+              <option value="店休公告">店休公告</option>
+              <option value="門市活動">門市活動</option>
+              <option value="新車到貨">新車到貨</option>
+              <option value="保養知識">保養知識</option>
+              <option value="公告">一般公告</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="date">📅 發布日期</label>
+            <input type="date" id="date" required>
+          </div>
+        </div>
+
+        <!-- 公告標題 -->
+        <div class="form-group">
+          <label for="title">✏️ 公告標題</label>
+          <input type="text" id="title" placeholder="請輸入標題 (例如：端午連假店休公告)" required>
+        </div>
+
+        <!-- 公告內容 -->
+        <div class="form-group">
+          <label for="content">📝 公告詳細內容 (支援換行)</label>
+          <textarea id="content" rows="6" placeholder="請輸入詳細公告內容..." required></textarea>
+        </div>
+
+        <!-- 管理員密碼驗證 -->
+        <div class="form-group">
+          <label for="password">🔒 管理員密碼</label>
+          <input type="password" id="password" placeholder="請輸入發布密碼 (預設: 1234)" required>
+        </div>
+
+        <!-- 送出按鈕 -->
+        <button type="submit" class="btn-submit" id="submitBtn">🚀 發布最新消息</button>
+      </form>
+
+      <div id="msgAlert"></div>
+    </div>
+  </main>
+
+  <script src="./js/header.js"></script>
+
+  <script>
+    // 自動預設今天日期
+    document.getElementById('date').valueAsDate = new Date();
+
+    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
+
+    document.getElementById('newsForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      const msgAlert = document.getElementById('msgAlert');
+
+      const payload = {
+        category: document.getElementById('category').value,
+        date: document.getElementById('date').value.replace(/-/g, '/'),
+        title: document.getElementById('title').value,
+        content: document.getElementById('content').value,
+        password: document.getElementById('password').value
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "⏳ 發布中，請稍候...";
+      msgAlert.style.display = "none";
+
+      fetch(BASE_GAS_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "🚀 發布最新消息";
+        msgAlert.style.display = "block";
+
+        if (data.success) {
+          msgAlert.className = "msg-success";
+          msgAlert.textContent = "🎉 " + data.message + " 前台重新整理即可看到！";
+          // 清空文字欄位
+          document.getElementById('title').value = "";
+          document.getElementById('content').value = "";
+        } else {
+          msgAlert.className = "msg-error";
+          msgAlert.textContent = "❌ " + data.message;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "🚀 發布最新消息";
+        msgAlert.style.display = "block";
+        msgAlert.className = "msg-error";
+        msgAlert.textContent = "❌ 發布連線失敗，請檢查網路或 GAS 設定！";
+      });
+    });
+  </script>
+</body>
+</html>
