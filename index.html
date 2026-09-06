@@ -140,7 +140,7 @@
     <!-- 主視覺區塊 -->
     <section class="hero">
       <h1>富國腳踏車店
-       <br>
+        <br>
         <span>專業售後與維修</span></h1>
       <p>國民旅遊卡特約商店｜公路車、登山車、電輔車專業保養與客製化調整</p>
       <div class="hero-btns">
@@ -173,7 +173,7 @@
       </div>
     </section>
 
-    <!-- 1. 精選車款展示區 (連線 products.json) -->
+    <!-- 1. 精選車款展示區 (讀取 GAS) -->
     <section>
       <div class="section-header">
         <h2 class="section-title-text">🚲 精選車款推薦</h2>
@@ -186,7 +186,7 @@
       </div>
     </section>
 
-    <!-- 2. 最新消息展示區 (連線 Google Sheets GAS) -->
+    <!-- 2. 最新消息展示區 (讀取 GAS) -->
     <section>
       <div class="section-header">
         <h2 class="section-title-text">📢 最新消息與公告</h2>
@@ -205,104 +205,83 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       
-      // ==========================================
-      // 1. 動態讀取 products.json (取前 3 筆精選車款)
-      // ==========================================
-      const productsContainer = document.getElementById("home-products-container");
-
-      function renderProducts(items) {
-        if (!productsContainer) return;
-        
-        if (!items || items.length === 0) {
-          productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無精選車款資料。</div>';
-          return;
-        }
-
-        productsContainer.innerHTML = "";
-        // 取 products.json 中的前 3 筆車種
-        items.slice(0, 3).forEach(item => {
-          const categoryName = item.category || item.type || '精選車款';
-          const cardHTML = `
-            <article class="card">
-              <div class="card-img-wrapper">
-                <img src="${item.image || item.imgUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600'}" alt="${item.title || item.name || '精選車款'}">
-              </div>
-              <div class="card-body">
-                <span class="tag">${categoryName}</span>
-                <h3 class="card-title">${item.title || item.name || ''}</h3>
-                <p class="card-desc">${item.description || item.desc || ''}</p>
-                <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-              </div>
-            </article>
-          `;
-          productsContainer.insertAdjacentHTML("beforeend", cardHTML);
-        });
-      }
-
-      // 嘗試讀取 products.json (優先嘗試 ./data/products.json，若找不到則嘗試 ./products.json)
-      function fetchProductsJSON(url) {
-        return fetch(url + '?t=' + Date.now()).then(res => {
-          if (!res.ok) throw new Error("HTTP 錯誤 " + res.status);
-          return res.json();
-        });
-      }
-
-      fetchProductsJSON('./data/products.json')
-        .catch(() => fetchProductsJSON('./products.json'))
-        .then(data => {
-          let list = [];
-          if (Array.isArray(data)) {
-            list = data;
-          } else if (data && typeof data === 'object') {
-            list = data.products || data.bikes || data.items || [];
-          }
-          renderProducts(list);
-        })
-        .catch(err => {
-          console.error("products.json 讀取失敗:", err);
-          if (productsContainer) {
-            productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">無法載入精選車款，請確認 products.json 檔案路徑與內容。</div>';
-          }
-        });
-
-      // ==========================================
-      // 2. 讀取 Google Sheets (抓取最後 3 筆最新消息)
-      // ==========================================
-      const newsContainer = document.getElementById("home-news-container");
-      
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
       const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
+      const productsContainer = document.getElementById("home-products-container");
+      const newsContainer = document.getElementById("home-news-container");
+
+      // 一次向 GAS 抓取資料 (包含 news 與 bikes)
       fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
         .then(res => res.json())
         .then(data => {
-          if (!data || !data.news || data.news.length === 0) {
-            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b;">目前尚無公告。</div>';
-            return;
+          
+          // ==========================================
+          // 1. 渲染精選車款 (最新前 3 筆)
+          // ==========================================
+          if (productsContainer) {
+            if (!data || !data.bikes || data.bikes.length === 0) {
+              productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">🚲 目前尚無車款資料。</div>';
+            } else {
+              productsContainer.innerHTML = "";
+              // 取最新新增的前 3 筆車款
+              const recentBikes = data.bikes.slice().reverse().slice(0, 3);
+              
+              recentBikes.forEach(item => {
+                const imgUrl = item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';
+                const cardHTML = `
+                  <article class="card">
+                    <div class="card-img-wrapper">
+                      <img src="${imgUrl}" alt="${item.name || '精選車款'}">
+                    </div>
+                    <div class="card-body">
+                      <span class="tag">${item.category || '精選車款'}</span>
+                      <h3 class="card-title">${item.name || ''}</h3>
+                      <p class="card-desc">${item.specs || ''}</p>
+                      <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+                    </div>
+                  </article>
+                `;
+                productsContainer.insertAdjacentHTML("beforeend", cardHTML);
+              });
+            }
           }
 
-          newsContainer.innerHTML = "";
-          
-          // 反轉陣列，優先取發布在最下方的最後 3 筆最新消息
-          const recentNews = data.news.slice().reverse().slice(0, 3);
-          
-          recentNews.forEach(item => {
-            const html = `
-              <article class="news-card-sm">
-                <div>
-                  <span class="badge">${item.category || "公告"}</span>
-                  <span class="date">📅 ${item.date || ""}</span>
-                </div>
-                <h3>${item.title || "最新消息"}</h3>
-                <p>${item.content || ""}</p>
-              </article>
-            `;
-            newsContainer.insertAdjacentHTML("beforeend", html);
-          });
+          // ==========================================
+          // 2. 渲染最新消息 (最新前 3 筆)
+          // ==========================================
+          if (newsContainer) {
+            if (!data || !data.news || data.news.length === 0) {
+              newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告。</div>';
+            } else {
+              newsContainer.innerHTML = "";
+              const recentNews = data.news.slice().reverse().slice(0, 3);
+              
+              recentNews.forEach(item => {
+                const html = `
+                  <article class="news-card-sm">
+                    <div>
+                      <span class="badge">${item.category || "公告"}</span>
+                      <span class="date">📅 ${item.date || ""}</span>
+                    </div>
+                    <h3>${item.title || "最新消息"}</h3>
+                    <p>${item.content || ""}</p>
+                  </article>
+                `;
+                newsContainer.insertAdjacentHTML("beforeend", html);
+              });
+            }
+          }
+
         })
         .catch(err => {
-          console.error("GAS 最新消息讀取失敗:", err);
-          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626;">最新消息讀取失敗，請確認 GAS 部署網址與權限。</div>';
+          console.error("GAS 資料讀取失敗:", err);
+          if (productsContainer) {
+            productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款資料載入失敗。</div>';
+          }
+          if (newsContainer) {
+            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">最新消息載入失敗。</div>';
+          }
         });
 
     });
