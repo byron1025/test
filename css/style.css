@@ -1,13 +1,51 @@
 /* ==========================================
-   📱 響應式漢堡選單專用 CSS
+   捷安特富國自行車店 - 全站整合與防跑版 CSS
+   主題配色：
+   - 藍天 (#0288d1 / #039be5)
+   - 白雲 (#ffffff / 淡色漸層)
+   - 綠地 (#2e7d32 / #e8f5e9)
+   - 太陽黃 (#fbc02d)
    ========================================== */
 
-.site-header {
+/* ------------------------------------------
+   1. 全域重置與基礎樣式
+   ------------------------------------------ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.8;
+  color: #2c3e50;
+  /* 淡綠地與淡藍天交織的柔和淡色背景 */
+  background: linear-gradient(180deg, #f0f7f4 0%, #eef6fb 100%);
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 核心修復：強制所有圖片不超出父容器且保持比例 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ------------------------------------------
+   2. 頂部導覽列 Header (藍天 + 太陽黃底邊)
+   ------------------------------------------ */
+.site-header, header.site-header, header {
   background: linear-gradient(135deg, #0288d1 0%, #039be5 100%);
   color: #ffffff;
   padding: 12px 20px;
   box-shadow: 0 4px 15px rgba(2, 136, 209, 0.2);
-  border-bottom: 4px solid #fbc02d;
+  border-bottom: 4px solid #fbc02d; /* 太陽黃 */
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -22,6 +60,13 @@
   position: relative;
 }
 
+/* 店名 Logo 與右側社交/商家檔案圖示群 */
+.brand-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .brand-logo {
   display: flex;
   align-items: center;
@@ -32,10 +77,36 @@
 }
 
 .brand-logo span {
-  color: #fbc02d;
+  color: #fbc02d; /* 太陽黃 */
 }
 
-/* 電腦版選單容器 */
+.brand-socials {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-socials a {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 0.85em;
+  transition: all 0.2s ease;
+}
+
+.brand-socials a:hover {
+  background: #fbc02d; /* 太陽黃 Hover */
+  color: #1b5e20;
+  transform: translateY(-2px);
+}
+
+/* 電腦版選單區域 */
 .nav-wrapper {
   display: flex;
   align-items: center;
@@ -58,27 +129,10 @@
 
 .nav-links a:hover,
 .nav-links a.active {
-  background-color: #fbc02d;
-  color: #1b5e20;
+  background-color: #fbc02d; /* 太陽黃 */
+  color: #1b5e20; /* 濃綠字 */
   font-weight: 800;
-}
-
-.header-socials {
-  display: flex;
-  gap: 10px;
-}
-
-.header-socials a {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.25);
-  border-radius: 50%;
-  color: #ffffff;
-  font-weight: bold;
-  font-size: 0.9em;
+  box-shadow: 0 3px 8px rgba(251, 192, 45, 0.4);
 }
 
 /* 預設隱藏漢堡按鈕 (電腦版) */
@@ -100,7 +154,260 @@
   transition: all 0.3s ease;
 }
 
-/* 📱 手機版 RWD (螢幕寬度 768px 以下時啟動漢堡選單) */
+/* ------------------------------------------
+   3. 版面通用容器與英雄 Banner
+   ------------------------------------------ */
+.container, .about-wrapper, main {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.hero-banner, .about-hero, section.hero {
+  text-align: center;
+  background: linear-gradient(135deg, #0288d1 0%, #29b6f6 100%);
+  color: #ffffff;
+  padding: 50px 20px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 20px rgba(3, 155, 229, 0.15);
+  border-bottom: 6px solid #fbc02d;
+}
+
+.hero-top-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.giant-badge, .badge, .badge-yellow {
+  display: inline-block;
+  background-color: #fbc02d;
+  color: #1b5e20;
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.95em;
+  box-shadow: 0 4px 10px rgba(251, 192, 45, 0.3);
+}
+
+.since-tag {
+  color: #e1f5fe;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.hero-banner h1, .about-hero h1 {
+  font-size: 2.2em;
+  margin-bottom: 12px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.hero-quote {
+  font-style: italic;
+  color: #e1f5fe;
+  font-size: 1.05em;
+  margin-bottom: 15px;
+}
+
+.contact-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.95em;
+  color: #ffffff;
+}
+
+.contact-info .divider {
+  color: #fbc02d;
+}
+
+/* ------------------------------------------
+   4. 商品卡片與網格系統 (防圖片暴走跑版)
+   ------------------------------------------ */
+.product-grid, .grid, .card-grid, section.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.product-card, .card, div.card, article.card {
+  background: #ffffff; /* 白雲卡片 */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0eef5;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.product-card:hover, .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(2, 136, 209, 0.15);
+  border-color: #29b6f6;
+}
+
+/* 強制鎖定商品卡片內的圖片尺寸與變形控制 */
+.product-card img, .card img, article.card img, div.card img {
+  width: 100% !important;
+  height: 220px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  background-color: #f4f9fc;
+  border-bottom: 1px solid #f0f7f4;
+  flex-shrink: 0;
+}
+
+.product-content, .card-body, div.card-body {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-tag, .tag {
+  display: inline-block;
+  font-size: 0.85em;
+  color: #2e7d32; /* 綠地綠 */
+  background-color: #e8f5e9;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
+.product-card h3, .card h3 {
+  font-size: 1.2em;
+  color: #0288d1; /* 藍天藍 */
+  margin-bottom: 10px;
+}
+
+.product-card p, .card p {
+  color: #546e7a;
+  font-size: 0.95em;
+  margin-bottom: 15px;
+  flex: 1;
+}
+
+/* ------------------------------------------
+   5. 關於我們與內容區塊設定
+   ------------------------------------------ */
+.about-card, .content-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 35px 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e0eef5;
+}
+
+.giant-dealer-section {
+  border-left: 6px solid #2e7d32; /* 生機綠邊框 */
+  background: linear-gradient(to right, #ffffff, #f1f8e9);
+}
+
+.giant-dealer-section h2 {
+  color: #2e7d32;
+  margin-bottom: 15px;
+  font-size: 1.4em;
+}
+
+.giant-dealer-section ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.giant-dealer-section li {
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.section-title {
+  text-align: center;
+  color: #0288d1;
+  font-size: 1.8em;
+  margin-bottom: 10px;
+}
+
+.section-desc {
+  text-align: center;
+  color: #546e7a;
+  margin-bottom: 30px;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.story-card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  border-top: 4px solid #2e7d32;
+  border-right: 1px solid #e0eef5;
+  border-bottom: 1px solid #e0eef5;
+  border-left: 1px solid #e0eef5;
+}
+
+.story-card h3 {
+  color: #0288d1;
+  border-bottom: 2px solid #fbc02d;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.service-item {
+  background: #ffffff;
+  padding: 25px 20px;
+  border-radius: 12px;
+  border: 2px solid #fff59d;
+  text-align: center;
+}
+
+.service-icon {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+}
+
+.service-item h4 {
+  color: #2e7d32;
+  margin-bottom: 8px;
+}
+
+/* ------------------------------------------
+   6. 頁尾 Footer
+   ------------------------------------------ */
+.about-footer-tribute, footer, .site-footer {
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 40px;
+  color: #2e7d32;
+  font-size: 0.95em;
+  border-top: 2px solid #e0eef5;
+  background-color: #ffffff;
+}
+
+/* ------------------------------------------
+   📱 7. 響應式手機版 RWD (螢幕 768px 以下)
+   ------------------------------------------ */
 @media (max-width: 768px) {
   .mobile-menu-toggle {
     display: flex; /* 顯示漢堡按鈕 */
@@ -117,7 +424,7 @@
     transform: translateY(-8px) rotate(-45deg);
   }
 
-  /* 手機版下拉選單選單 */
+  /* 手機版下拉選單 */
   .nav-wrapper {
     position: absolute;
     top: 100%;
@@ -149,8 +456,24 @@
     padding: 10px;
   }
 
-  .header-socials {
-    justify-content: center;
-    margin-top: 5px;
+  .story-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-grid, .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card img, .card img {
+    height: 200px !important;
+  }
+
+  .contact-info .divider {
+    display: none;
+  }
+  
+  .contact-info {
+    flex-direction: column;
+    gap: 5px;
   }
 }
