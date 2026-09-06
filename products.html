@@ -79,26 +79,22 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // 最新發布的 GAS API 網址
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwrzmyOBpf3GHooeExrj_3DJKRx5fPeQ9uuGA7Ro0qmIzj0OxdTzzCVkXk5czyHlVVG/exec";
-      const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
-      
       const container = document.getElementById("products-container");
       const filterBtns = document.querySelectorAll(".filter-btn");
       let allBikes = []; 
 
-      // 1. 向 GAS 讀取車款資料 (自動對應 bikes 或 products 欄位)
-      fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
+      // 1. 抓取 API 資料
+      fetch(BASE_GAS_URL + "?t=" + Date.now())
         .then(res => res.json())
         .then(data => {
-          console.log("API 回傳資料:", data); // 控制台除錯用
+          console.log("成功取得 API 資料:", data);
           
-          // 💡 超強相容：無論 GAS 回傳的是 data.bikes 還是 data.products 都能自動取得
-          const list = (data && (data.bikes || data.products)) ? (data.bikes || data.products) : [];
+          // 自動支援 bikes 或 products 陣列
+          allBikes = (data && (data.bikes || data.products)) ? (data.bikes || data.products) : [];
 
-          if (list && list.length > 0) {
-            allBikes = list;
-            renderBikes(allBikes); // 預設顯示全部
+          if (allBikes.length > 0) {
+            renderBikes(allBikes); // 成功載入，預設渲染全部車款
           } else {
             container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">🚲 目前尚無車款資料。</div>';
           }
@@ -108,7 +104,7 @@
           container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">車款資料載入失敗。</div>';
         });
 
-      // 2. 渲染車款列表
+      // 2. 畫面渲染函式
       function renderBikes(bikes) {
         if (!bikes || bikes.length === 0) {
           container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">此分類目前無相關車款。</div>';
@@ -121,14 +117,14 @@
           const cardHTML = `
             <article class="card">
               <div class="card-img-wrapper">
-                <img src="${imgUrl}" alt="${item.name || '車款圖片'}" style="width:100%; height:200px; object-fit:cover;">
+                <img src="${imgUrl}" alt="${item.name || '車款圖片'}">
               </div>
-              <div class="card-body" style="padding: 1rem;">
-                <span class="tag" style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">${item.category || '精選車款'}</span>
-                <h3 class="card-title" style="margin: 0.5rem 0; font-size:1.2rem;">${item.name || '精選車款'}</h3>
+              <div class="card-body">
+                <span class="tag">${item.category || '精選車款'}</span>
+                <h3 class="card-title">${item.name || '精選車款'}</h3>
                 ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
-                <p class="card-desc" style="color:#64748b; font-size:0.9rem;">${item.specs || ''}</p>
-                <a href="contact.html" class="btn-detail" style="display:inline-block; margin-top:0.5rem; color:#dc2626; text-decoration:none; font-weight:bold;">🔴 預約門市試乘</a>
+                <p class="card-desc">${item.specs || ''}</p>
+                <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
               </div>
             </article>
           `;
@@ -136,7 +132,7 @@
         });
       }
 
-      // 3. 分類篩選點擊事件 (雙向模糊比對)
+      // 3. 按鈕點擊篩選邏輯
       filterBtns.forEach(btn => {
         btn.addEventListener("click", function () {
           filterBtns.forEach(b => b.classList.remove("active"));
@@ -144,7 +140,7 @@
 
           const targetCategory = this.getAttribute("data-category");
 
-          if (targetCategory === "all") {
+          if (!targetCategory || targetCategory === "all" || targetCategory === "全部車種") {
             renderBikes(allBikes);
           } else {
             const filtered = allBikes.filter(bike => {
