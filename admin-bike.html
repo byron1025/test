@@ -114,7 +114,7 @@
   <script src="./js/header.js"></script>
 
   <script>
-    // 最新部署的 GAS 網址
+    // GAS 部署網址
     const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
 
     const form = document.getElementById("bike-form");
@@ -132,57 +132,81 @@
         return;
       }
 
+      // 檔案大小限制 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        alert("圖片檔案過大，請選擇 5MB 以下的照片！");
+        return;
+      }
+
       // 顯示上傳中狀態
       statusMsg.style.display = "block";
       statusMsg.style.backgroundColor = "#e0f2fe";
       statusMsg.style.color = "#0369a1";
-      statusMsg.innerHTML = "⏳ 照片處理與資料上傳中，請稍候...";
+      statusMsg.innerHTML = "⏳ 正在處理照片並上傳中，請稍候...";
       submitBtn.disabled = true;
 
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = function() {
-        const rawBase64 = reader.result.split(',')[1];
 
-        // 📦 傳送給 GAS 的資料（明確指定 action: "add_bike"）
-        const payload = {
-          action: "add_bike",
-          password: document.getElementById("admin-password").value,
-          category: document.getElementById("bike-category").value,
-          name: document.getElementById("bike-name").value,
-          price: document.getElementById("bike-price").value,
-          specs: document.getElementById("bike-specs").value,
-          fileName: file.name,
-          mimeType: file.type,
-          fileData: rawBase64
-        };
+      reader.onerror = function() {
+        submitBtn.disabled = false;
+        statusMsg.style.backgroundColor = "#fee2e2";
+        statusMsg.style.color = "#b91c1c";
+        statusMsg.innerHTML = "❌ 讀取照片檔案失敗，請重試！";
+      };
 
-        fetch(BASE_GAS_URL, {
-          method: "POST",
-          body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(data => {
-          submitBtn.disabled = false;
-          if (data.status === "success") {
-            statusMsg.style.backgroundColor = "#dcfce7";
-            statusMsg.style.color = "#15803d";
-            statusMsg.innerHTML = "✅ " + data.message;
-            form.reset();
-          } else {
+      reader.onload = function(evt) {
+        try {
+          // 取得純 Base64 字串
+          const rawBase64 = evt.target.result.split(',')[1];
+
+          // 📦 封裝傳送資料
+          const payload = {
+            action: "add_bike",
+            password: document.getElementById("admin-password").value,
+            category: document.getElementById("bike-category").value,
+            name: document.getElementById("bike-name").value,
+            price: document.getElementById("bike-price").value,
+            specs: document.getElementById("bike-specs").value,
+            fileName: file.name,
+            mimeType: file.type,
+            fileData: rawBase64
+          };
+
+          fetch(BASE_GAS_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          })
+          .then(res => res.json())
+          .then(data => {
+            submitBtn.disabled = false;
+            // 判斷回傳結果（相容 status 或訊息包含"成功"字眼）
+            if (data.status === "success" || (data.message && data.message.includes("成功"))) {
+              statusMsg.style.backgroundColor = "#dcfce7"; // 淡綠色背景
+              statusMsg.style.color = "#15803d";           // 深綠色文字
+              statusMsg.innerHTML = "✅ " + (data.message || "車款與圖片新增成功！");
+              form.reset();
+            } else {
+              statusMsg.style.backgroundColor = "#fee2e2"; // 淡紅色背景
+              statusMsg.style.color = "#b91c1c";           // 深紅色文字
+              statusMsg.innerHTML = "❌ " + data.message;
+            }
+          })
+          .catch(err => {
+            console.error(err);
+            submitBtn.disabled = false;
             statusMsg.style.backgroundColor = "#fee2e2";
             statusMsg.style.color = "#b91c1c";
-            statusMsg.innerHTML = "❌ " + data.message;
-          }
-        })
-        .catch(err => {
+            statusMsg.innerHTML = "❌ 連線失敗或請求逾時，請檢查網路！";
+          });
+
+        } catch (err) {
           console.error(err);
           submitBtn.disabled = false;
-          statusMsg.style.backgroundColor = "#fee2e2";
-          statusMsg.style.color = "#b91c1c";
-          statusMsg.innerHTML = "❌ 連線失敗，請檢查網路或 GAS 設定！";
-        });
+          alert("照片轉換錯誤：" + err.message);
+        }
       };
+
+      reader.readAsDataURL(file);
     });
   </script>
 </body>
