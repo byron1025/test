@@ -3,208 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精選車款與目錄 - 捷安特富國店</title>
+  <title>精選車款與目錄 - 捷安特富國自行車店</title>
   <link rel="stylesheet" href="./css/style.css">
   <style>
-    .products-header {
-      margin: 30px 0 20px 0;
+    .page-title {
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
     }
-    .filter-buttons {
+    .page-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    /* 分類篩選按鈕列 */
+    .filter-bar {
       display: flex;
-      gap: 10px;
+      gap: 0.75rem;
       flex-wrap: wrap;
-      margin-top: 15px;
+      margin-bottom: 2rem;
     }
     .filter-btn {
-      padding: 8px 16px;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      color: #334155;
+      background: white;
+      border: 2px solid #cbd5e1;
+      color: var(--text-dark);
+      padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
+      font-weight: bold;
+      transition: all 0.2s;
     }
-    .filter-btn.active, .filter-btn:hover {
-      background: #0288d1;
-      color: #ffffff;
-      border-color: #0288d1;
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--brand-blue);
+      color: white;
+      border-color: var(--brand-blue);
     }
-    .bike-grid {
+    /* 車款列表 Grid */
+    .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 25px;
-      margin-top: 25px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
     }
-    .bike-card {
-      background: #ffffff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #e2e8f0;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .bike-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    }
-    .bike-img-box {
-      width: 100%;
-      height: 220px;
-      background: #f1f5f9;
-      overflow: hidden;
-    }
-    .bike-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .bike-info {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-    .bike-tag {
-      display: inline-block;
-      align-self: flex-start;
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
+    .card-price {
+      color: #dc2626;
       font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .bike-title {
-      font-size: 1.2rem;
-      color: #0f172a;
-      margin: 0 0 8px 0;
-    }
-    .bike-price {
-      color: #e11d48;
       font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .bike-desc {
-      color: #64748b;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin-bottom: 15px;
-      flex-grow: 1;
-      white-space: pre-wrap;
-    }
-    .loading-text {
-      text-align: center;
-      padding: 50px;
-      color: #64748b;
-      font-size: 1.1rem;
-      grid-column: 1 / -1;
+      margin: 6px 0;
     }
   </style>
 </head>
 <body>
 
-  <main class="container">
-    <div class="products-header">
-      <h2>🚴 精選車款與目錄</h2>
-      <p style="color: #64748b;">歡迎親臨門市試乘與諮詢，我們提供最專業的選車與調整服務</p>
-      
-      <!-- 分類篩選按鈕 -->
-      <div class="filter-buttons">
-        <button class="filter-btn active" onclick="filterBikes('全部')">全部車種</button>
-        <button class="filter-btn" onclick="filterBikes('公路車')">公路車</button>
-        <button class="filter-btn" onclick="filterBikes('登山車')">登山車</button>
-        <button class="filter-btn" onclick="filterBikes('運動健身車')">運動健身車</button>
-        <button class="filter-btn" onclick="filterBikes('電輔車')">電輔車</button>
-        <button class="filter-btn" onclick="filterBikes('童車與休閒車')">童車與休閒車</button>
-      </div>
+  <main class="container" style="padding-top: 2rem;">
+    <h1 class="page-title">🚲 精選車款與目錄</h1>
+    <p class="page-subtitle">歡迎親臨門市試乘與諮詢，我們提供最專業的選車與調整服務</p>
+
+    <!-- 分類篩選按鈕區 -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-category="all">全部車種</button>
+      <button class="filter-btn" data-category="公路車">公路車</button>
+      <button class="filter-btn" data-category="登山車">登山車</button>
+      <button class="filter-btn" data-category="運動健身">運動健身車</button>
+      <button class="filter-btn" data-category="電輔車">電輔車</button>
+      <button class="filter-btn" data-category="童車">童車與休閒車</button>
     </div>
 
-    <!-- 車款展示區 -->
-    <div class="bike-grid" id="bikeGrid">
-      <div class="loading-text">⏳ 車款資料載入中，請稍候...</div>
+    <!-- 車款列表容器 -->
+    <div class="products-grid" id="products-container">
+      <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
+        🔄 正在載入車款資料...
+      </div>
     </div>
   </main>
 
   <script src="./js/header.js"></script>
 
   <script>
-    // 🔗 您的 GAS 最新部署網址
-// 🔗 最新 GAS 部署網址
-const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
+    document.addEventListener("DOMContentLoaded", function () {
+      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
+      const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
+      
+      const container = document.getElementById("products-container");
+      const filterBtns = document.querySelectorAll(".filter-btn");
+      let allBikes = []; // 儲存所有車款資料
 
-    let allBikesData = [];
-
-    // 自動抓取 Google Sheet 資料
-    document.addEventListener("DOMContentLoaded", function() {
-      fetch(BASE_GAS_URL)
+      // 1. 向 GAS 讀取車款資料
+      fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
         .then(res => res.json())
         .then(data => {
           if (data && data.bikes && data.bikes.length > 0) {
-            allBikesData = data.bikes;
-            renderBikes(allBikesData);
+            allBikes = data.bikes;
+            renderBikes(allBikes); // 預設顯示全部
           } else {
-            document.getElementById('bikeGrid').innerHTML = '<div class="loading-text">🚲 目前尚無車款資料，請至後台新增！</div>';
+            container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">🚲 目前尚無車款資料。</div>';
           }
         })
         .catch(err => {
-          console.error(err);
-          document.getElementById('bikeGrid').innerHTML = '<div class="loading-text">❌ 資料載入失敗，請稍後重整頁面。</div>';
+          console.error("載入失敗:", err);
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 2rem;">車款資料載入失敗。</div>';
         });
-    });
 
-    // 渲染車款卡片
-    function renderBikes(bikes) {
-      const grid = document.getElementById('bikeGrid');
-      grid.innerHTML = '';
-
-      if (bikes.length === 0) {
-        grid.innerHTML = '<div class="loading-text">🔍 該分類下暫無相關車款</div>';
-        return;
-      }
-
-      bikes.forEach(bike => {
-        const imgUrl = bike.imageUrl || "https://via.placeholder.com/400x300?text=Giant+Bike";
-        
-        const cardHTML = `
-          <article class="bike-card">
-            <div class="bike-img-box">
-              <img src="${imgUrl}" alt="${bike.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Error'">
-            </div>
-            <div class="bike-info">
-              <span class="bike-tag">${bike.category || "經典車款"}</span>
-              <h3 class="bike-title">${bike.name}</h3>
-              ${bike.price ? `<div class="bike-price">${bike.price}</div>` : ''}
-              <p class="bike-desc">${bike.features || ""}</p>
-            </div>
-          </article>
-        `;
-        grid.insertAdjacentHTML('beforeend', cardHTML);
-      });
-    }
-
-    // 分類篩選功能
-    function filterBikes(category) {
-      const buttons = document.querySelectorAll('.filter-btn');
-      buttons.forEach(btn => {
-        if (btn.textContent.includes(category) || (category === '全部' && btn.textContent.includes('全部'))) {
-          btn.classList.add('active');
-        } else {
-          btn.classList.remove('active');
+      // 2. 渲染車款列表 (含關鍵修正：模糊比對分類)
+      function renderBikes(bikes) {
+        if (!bikes || bikes.length === 0) {
+          container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">此分類目前無相關車款。</div>';
+          return;
         }
+
+        container.innerHTML = "";
+        bikes.forEach(item => {
+          const imgUrl = item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';
+          const cardHTML = `
+            <article class="card">
+              <div class="card-img-wrapper">
+                <img src="${imgUrl}" alt="${item.name}">
+              </div>
+              <div class="card-body">
+                <span class="tag">${item.category || '精選車款'}</span>
+                <h3 class="card-title">${item.name || '車款名稱'}</h3>
+                ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
+                <p class="card-desc">${item.specs || ''}</p>
+                <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
+              </div>
+            </article>
+          `;
+          container.insertAdjacentHTML("beforeend", cardHTML);
+        });
+      }
+
+      // 3. 切換分類按鈕點擊事件
+      filterBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+          // 切換按鈕 active 樣式
+          filterBtns.forEach(b => b.classList.remove("active"));
+          this.classList.add("active");
+
+          const targetCategory = this.getAttribute("data-category");
+
+          if (targetCategory === "all") {
+            renderBikes(allBikes);
+          } else {
+            // 💡 關鍵修復：改用 includes 雙向包含比對！
+            // 只要按鈕文字 (例如 "童車") 有包含在試算表分類裡，或是試算表分類包含按鈕關鍵字，就能成功對應！
+            const filtered = allBikes.filter(bike => {
+              const cat = (bike.category || "").trim();
+              return cat.includes(targetCategory) || targetCategory.includes(cat);
+            });
+            renderBikes(filtered);
+          }
+        });
       });
 
-      if (category === '全部') {
-        renderBikes(allBikesData);
-      } else {
-        const filtered = allBikesData.filter(b => b.category && b.category.includes(category));
-        renderBikes(filtered);
-      }
-    }
+    });
   </script>
 </body>
 </html>
