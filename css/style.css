@@ -30,7 +30,7 @@ a {
   color: inherit;
 }
 
-/* 核心修復：強制所有圖片不超出父容器且保持比例 */
+/* 強制所有圖片不超出父容器且保持比例 */
 img {
   max-width: 100%;
   height: auto;
@@ -48,7 +48,7 @@ img {
   border-bottom: 4px solid #fbc02d; /* 太陽黃 */
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 9999 !important; /* 最高層級，避免被內容蓋住 */
 }
 
 .header-container {
@@ -172,6 +172,8 @@ img {
   margin-bottom: 30px;
   box-shadow: 0 10px 20px rgba(3, 155, 229, 0.15);
   border-bottom: 6px solid #fbc02d;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-top-info {
@@ -424,25 +426,24 @@ img {
     transform: translateY(-8px) rotate(-45deg);
   }
 
-  /* 手機版下拉選單 */
+  /* 手機版下拉選單：修正 z-index 浮在 Banner 最上方 */
   .nav-wrapper {
-    position: absolute;
-    top: 100%;
-    left: -20px;
-    right: -20px;
-    background: #0288d1;
+    position: absolute !important;
+    top: 100% !important;
+    left: -20px !important;
+    right: -20px !important;
+    background: #0288d1 !important;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px !important;
     gap: 15px;
-    box-shadow: 0 10px 15px rgba(0,0,0,0.15);
-    border-bottom: 4px solid #fbc02d;
-
-    /* 預設隱藏，點擊漢堡選單後展開 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+    border-bottom: 4px solid #fbc02d !important;
+    z-index: 99999 !important; /* 超高層級修復遮擋問題 */
     display: none;
   }
 
   .nav-wrapper.open {
-    display: flex;
+    display: flex !important;
   }
 
   .nav-links {
