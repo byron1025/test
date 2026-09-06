@@ -6,7 +6,7 @@
   <title>捷安特富國自行車店 - 官方網站</title>
   <link rel="stylesheet" href="./css/style.css">
   <style>
-    /* 店家介紹 */
+    /* 店家介紹區塊樣式 */
     .store-intro-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -48,7 +48,7 @@
       font-weight: bold;
     }
 
-    /* 標題樣式 */
+    /* 區塊標題 */
     .section-title {
       color: #0284c7;
       margin-bottom: 1.5rem;
@@ -60,39 +60,7 @@
       align-items: center;
     }
 
-    /* 最新消息網格 */
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .news-card {
-      background: white;
-      border-radius: 8px;
-      padding: 1.25rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-    }
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    .news-tag {
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      font-weight: bold;
-    }
-    .news-date { color: #94a3b8; font-size: 0.85rem; }
-    .news-title { margin: 0 0 0.5rem 0; font-size: 1.15rem; color: #1e293b; }
-    .news-content { color: #64748b; font-size: 0.95rem; line-height: 1.5; margin: 0; }
-
-    /* 車款網格 */
+    /* 精選車款網格 */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -116,6 +84,16 @@
     }
     .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
     .card-body { padding: 1.25rem; display: flex; flex-direction: column; flex-grow: 1; }
+    .card-tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      align-self: flex-start;
+      margin-bottom: 0.5rem;
+    }
     .card-price { color: #dc2626; font-weight: bold; font-size: 1.15rem; margin: 0.5rem 0; }
     .card-desc { color: #64748b; font-size: 0.9rem; line-height: 1.4; flex-grow: 1; }
     .btn-detail { display: inline-block; margin-top: 1rem; color: #dc2626; text-decoration: none; font-weight: bold; }
@@ -125,7 +103,7 @@
 
   <main class="container" style="padding-top: 2rem;">
 
-    <!-- 1. 店家介紹（文字版） -->
+    <!-- 1. 店家介紹區塊 -->
     <section class="store-intro-grid">
       <div class="intro-card">
         <h3>ℹ️ 關於我們</h3>
@@ -150,19 +128,7 @@
       </div>
     </section>
 
-    <!-- 2. 最新消息與公告區塊 -->
-    <section id="news-section">
-      <h2 class="section-title">
-        <span>📢 最新消息與公告</span>
-      </h2>
-      <div class="news-grid" id="news-container">
-        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
-          🔄 正在載入最新公告...
-        </div>
-      </div>
-    </section>
-
-    <!-- 3. 熱門精選車款區塊 -->
+    <!-- 2. 熱門精選車款區塊 -->
     <section id="products-section">
       <h2 class="section-title">
         <span>🚲 店長精選車款</span>
@@ -176,40 +142,16 @@
 
   </main>
 
-  <!-- 先載入 Header 腳本 -->
   <script src="./js/header.js"></script>
 
-  <!-- 獨立資料抓取腳本 -->
   <script>
-    // 獨立出來的 API 載入函式，確保無論 Header 如何載入都能正常抓取 Sheet
-    function loadSheetData() {
+    function loadBikesData() {
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
-      const newsContainer = document.getElementById("news-container");
       const bikesContainer = document.getElementById("featured-bikes-container");
 
       fetch(BASE_GAS_URL + "?v=" + Date.now())
         .then(res => res.json())
         .then(data => {
-          console.log("成功連結 Sheet，收到資料:", data);
-
-          // 1. 渲染最新消息
-          const newsList = data.news || [];
-          if (!Array.isArray(newsList) || newsList.length === 0) {
-            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告消息。</div>';
-          } else {
-            newsContainer.innerHTML = newsList.slice(0, 3).map(item => `
-              <article class="news-card">
-                <div class="news-header">
-                  <span class="news-tag">${item.category || '公告'}</span>
-                  <span class="news-date">${item.date || ''}</span>
-                </div>
-                <h3 class="news-title">${item.title || '最新消息'}</h3>
-                <p class="news-content">${item.content || ''}</p>
-              </article>
-            `).join('');
-          }
-
-          // 2. 渲染精選車款
           const bikeList = data.bikes || data.products || [];
           if (!Array.isArray(bikeList) || bikeList.length === 0) {
             bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無精選車款資料。</div>';
@@ -224,7 +166,7 @@
                     <img src="${imgUrl}" alt="${item.name || '車款圖片'}" onerror="this.src='${defaultImg}'">
                   </div>
                   <div class="card-body">
-                    <span class="news-tag" style="align-self: flex-start; margin-bottom: 0.5rem;">${item.category || '精選車款'}</span>
+                    <span class="card-tag">${item.category || '精選車款'}</span>
                     <h3 style="margin: 0.25rem 0; font-size: 1.15rem; color: #1e293b;">${item.name || '車款名稱'}</h3>
                     ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
                     <p class="card-desc">${item.specs || ''}</p>
@@ -236,17 +178,15 @@
           }
         })
         .catch(err => {
-          console.error("Sheet 資料讀取失敗:", err);
-          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">公告連線失敗，請檢查網路或 Apps Script。</div>';
-          bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款連線失敗，請檢查網路或 Apps Script。</div>';
+          console.error("車款資料讀取失敗:", err);
+          bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款連線失敗，請檢查網路。</div>';
         });
     }
 
-    // 觸發載入資料
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", loadSheetData);
+      document.addEventListener("DOMContentLoaded", loadBikesData);
     } else {
-      loadSheetData();
+      loadBikesData();
     }
   </script>
 </body>
