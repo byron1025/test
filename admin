@@ -138,7 +138,7 @@
     // 自動預設今天日期
     document.getElementById('date').valueAsDate = new Date();
 
-    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
+    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwx97YOXFiEo2p3DyPw5VMJBhbvyIzHUw5Ya-cg59cHDxTt3jIvIbsM7i2f7IsYCSGv/exec";
 
     document.getElementById('newsForm').addEventListener('submit', function(e) {
       e.preventDefault();
