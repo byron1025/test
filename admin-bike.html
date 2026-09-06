@@ -114,7 +114,7 @@
   <script src="./js/header.js"></script>
 
   <script>
-    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwNi8ra2hQmIkGLCf-PznhTfNozWh6xmYkt6yhmem86oTcYi89lfP5CuOrAIPyzAHA1/execc";
+    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
 
     const form = document.getElementById("bike-form");
     const statusMsg = document.getElementById("status-message");
@@ -169,22 +169,24 @@
 
           fetch(BASE_GAS_URL, {
             method: "POST",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
             body: JSON.stringify(payload)
           })
           .then(res => res.json())
           .then(data => {
             submitBtn.disabled = false;
             
-            // 判斷 status 或 message
-            if (data.status === "success" || (data.message && data.message.includes("成功"))) {
+            if (data.status === "success") {
               statusMsg.style.backgroundColor = "#dcfce7";
               statusMsg.style.color = "#15803d";
-              statusMsg.innerHTML = "✅ 車款與圖片新增成功！";
+              statusMsg.innerHTML = "✅ " + data.message;
               form.reset();
             } else {
               statusMsg.style.backgroundColor = "#fee2e2";
               statusMsg.style.color = "#b91c1c";
-              statusMsg.innerHTML = "❌ " + (data.message || "新增失敗，請檢查密碼！");
+              statusMsg.innerHTML = "❌ " + data.message;
             }
           })
           .catch(err => {
@@ -192,7 +194,7 @@
             submitBtn.disabled = false;
             statusMsg.style.backgroundColor = "#fee2e2";
             statusMsg.style.color = "#b91c1c";
-            statusMsg.innerHTML = "❌ 連線失敗或傳送超時，請重試！";
+            statusMsg.innerHTML = "❌ 傳送失敗或逾時，請檢查網路！";
           });
 
         } catch (err) {
