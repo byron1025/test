@@ -1,167 +1,74 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>捷安特富國自行車店 - 官方網站</title>
-  <link rel="stylesheet" href="./css/style.css">
-  <style>
-    /* 首頁最新消息與精選區塊樣式 */
-    .section-title {
-      color: var(--primary-blue, #0284c7);
-      margin-bottom: 1.5rem;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 0.5rem;
-    }
-    .news-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .news-card {
-      background: white;
-      border-radius: 8px;
-      padding: 1.25rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      border: 1px solid #e2e8f0;
-    }
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-    }
-    .news-tag {
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      font-weight: bold;
-    }
-    .news-date {
-      color: #94a3b8;
-      font-size: 0.85rem;
-    }
-    .news-title {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.1rem;
-      color: #1e293b;
-    }
-    .news-content {
-      color: #64748b;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      margin: 0;
-    }
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .card-price {
-      color: #dc2626;
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin: 6px 0;
-    }
-  </style>
-</head>
-<body>
+function doGet(e) {
+  let newsList = [];
+  let bikeList = [];
 
-  <!-- 頁首導覽列將由 header.js 動態注入 -->
+  // 1. 讀取最新消息試算表
+  try {
+    const newsSS = SpreadsheetApp.openById("1fm-0ayKKq533Ogn5Xei75GtT96TmIVBq5p2V1Wsi2OU");
+    const newsSheet = newsSS.getSheets()[0];
+    const newsData = newsSheet.getDataRange().getValues();
+    if (newsData.length > 1) {
+      newsList = newsData.slice(1)
+        .filter(r => r[0] || r[1])
+        .map(r => ({
+          category: String(r[0] || "公告").trim(),
+          title: String(r[1] || "最新消息").trim(),
+          date: formatDate(r[2]),
+          content: String(r[3] || "").trim()
+        }));
+    }
+  } catch (err) {
+    Logger.log("最新消息讀取失敗: " + err.toString());
+  }
 
-  <main class="container" style="padding-top: 2rem;">
-    <!-- 最新消息區塊 -->
-    <section>
-      <h2 class="section-title">📢 最新消息與公告</h2>
-      <div class="news-grid" id="news-container">
-        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
-          🔄 正在載入最新公告...
-        </div>
-      </div>
-    </section>
-
-    <!-- 熱門精選車款區塊 -->
-    <section>
-      <h2 class="section-title">🚲 店長精選車款</h2>
-      <div class="products-grid" id="featured-bikes-container">
-        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
-          🔄 正在載入精選車款...
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="./js/header.js"></script>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // 統一使用的後端 API 部署網址（對齊新增表單）
-      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
-      
-      const newsContainer = document.getElementById("news-container");
-      const bikesContainer = document.getElementById("featured-bikes-container");
-
-      // 發送 API 請求抓取最新消息與車款
-      fetch(BASE_GAS_URL + "?v=" + Date.now())
-        .then(res => res.json())
-        .then(data => {
-          console.log("首頁收到後端資料:", data);
-
-          // 1. 渲染最新消息
-          const newsList = data.news || [];
-          if (newsList.length === 0) {
-            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告消息。</div>';
-          } else {
-            newsContainer.innerHTML = newsList.map(item => `
-              <article class="news-card">
-                <div class="news-header">
-                  <span class="news-tag">${item.category || '公告'}</span>
-                  <span class="news-date">${item.date || ''}</span>
-                </div>
-                <h3 class="news-title">${item.title || '最新消息'}</h3>
-                <p class="news-content">${item.content || ''}</p>
-              </article>
-            `).join('');
+  // 2. 讀取車種產品試算表
+  try {
+    const bikeSS = SpreadsheetApp.openById("12Yu_wzSgRe0T-fTb8AbDycFvO3bfnpCOV8roIoTMSHM");
+    const bikeSheet = bikeSS.getSheetByName("車款資料") || bikeSS.getSheets()[0];
+    const bikeData = bikeSheet.getDataRange().getValues();
+    
+    if (bikeData.length > 1) {
+      bikeList = bikeData.slice(1)
+        .filter(r => r.some(cell => cell !== "" && cell !== null && cell !== undefined))
+        .map(r => {
+          let img = "";
+          for (let c = 0; c < r.length; c++) {
+            let val = String(r[c] || "").trim();
+            if (val.toLowerCase().indexOf("http") === 0) {
+              img = val;
+              break;
+            }
           }
 
-          // 2. 渲染精選車款 (只顯示前 3-6 筆)
-          const bikeList = data.bikes || data.products || [];
-          if (bikeList.length === 0) {
-            bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無精選車款資料。</div>';
-          } else {
-            const featuredList = bikeList.slice(0, 6); // 取前 6 筆顯示在首頁
-            bikesContainer.innerHTML = featuredList.map(item => {
-              const defaultImg = "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600";
-              const imgUrl = item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : defaultImg;
-
-              return `
-                <article class="card">
-                  <div class="card-img-wrapper">
-                    <img src="${imgUrl}" alt="${item.name || '車款圖片'}" onerror="this.src='${defaultImg}'" style="width:100%; height:200px; object-fit:cover;">
-                  </div>
-                  <div class="card-body" style="padding: 1rem;">
-                    <span class="tag" style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">${item.category || '精選車款'}</span>
-                    <h3 class="card-title" style="margin: 0.5rem 0; font-size:1.2rem;">${item.name || '車款名稱'}</h3>
-                    ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
-                    <p class="card-desc" style="color:#64748b; font-size:0.9rem;">${item.specs || ''}</p>
-                    <a href="contact.html" class="btn-detail" style="display:inline-block; margin-top:0.5rem; color:#dc2626; text-decoration:none; font-weight:bold;">🔴 預約門市試乘</a>
-                  </div>
-                </article>
-              `;
-            }).join('');
+          let priceVal = r[2];
+          let formattedPrice = "";
+          if (priceVal !== "" && priceVal !== null && priceVal !== undefined) {
+            formattedPrice = isNaN(priceVal) ? String(priceVal) : ("NT$ " + Number(priceVal).toLocaleString());
           }
 
-        })
-        .catch(err => {
-          console.error("首頁資料載入失敗:", err);
-          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">公告載入失敗。</div>';
-          bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款載入失敗。</div>';
+          return {
+            category: String(r[0] || "精選車款").trim(),
+            name: String(r[1] || "精選車款").trim(),
+            price: formattedPrice,
+            specs: String(r[3] || "").trim(),
+            imageUrl: img
+          };
         });
-    });
-  </script>
-</body>
-</html>
+    }
+  } catch (err) {
+    Logger.log("車款讀取失敗: " + err.toString());
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ 
+    status: "success", 
+    news: newsList, 
+    bikes: bikeList,
+    products: bikeList
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function formatDate(dateVal) {
+  if (!dateVal) return "";
+  if (dateVal instanceof Date) return Utilities.formatDate(dateVal, Session.getScriptTimeZone(), "yyyy-MM-dd");
+  return String(dateVal).trim();
+}
