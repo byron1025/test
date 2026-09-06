@@ -1,238 +1,97 @@
-<style>
-    /* 定義專屬變數，避免影響外部 */
-    .fuguocycle-wrapper {
-        --primary-blue: #0033a0;
-        --light-blue: #e6f0fa;
-        --dark-gray: #333333;
-        --light-gray: #f8f9fa;
-        --accent-orange: #e65100;
-        font-family: 'Helvetica Neue', Helvetica, 'PingFang TC', 'LiHei Pro', 'Hiragino Sans GB', 'Microsoft JhengHei', sans-serif;
-        line-height: 1.8;
-        color: var(--dark-gray);
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 20px 0;
-    }
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關於我們 - 捷安特富國自行車店</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- 加入 defer 確保網頁結構載入後才執行 JS -->
+  <script src="js/header.js" defer></script>
+</head>
+<body>
 
-    /* 頂部橫幅 */
-    .fuguocycle-wrapper .header-banner {
-        text-align: center;
-        background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-        color: white;
-        padding: 60px 20px;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        position: relative;
-    }
-
-    .fuguocycle-wrapper .giant-badge {
-        display: inline-block;
-        background-color: var(--primary-blue);
-        color: white;
-        padding: 8px 24px;
-        border-radius: 30px;
-        font-weight: bold;
-        font-size: 1.1em;
-        letter-spacing: 2px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0, 51, 160, 0.4);
-    }
-
-    .fuguocycle-wrapper .header-banner h1 {
-        font-size: 2.5em;
-        margin: 0 0 10px 0;
-        font-weight: 800;
-        color: white;
-    }
-
-    .fuguocycle-wrapper .header-banner p.subtitle {
-        font-size: 1.2em;
-        color: #cccccc;
-        margin-bottom: 20px;
-    }
-
-    /* 捷安特專區描述 */
-    .fuguocycle-wrapper .giant-dealer-section {
-        background-color: white;
-        border-left: 6px solid var(--primary-blue);
-        padding: 30px 40px;
-        border-radius: 0 12px 12px 0;
-        margin-bottom: 40px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .fuguocycle-wrapper .giant-dealer-section h2 {
-        color: var(--primary-blue);
-        margin-top: 0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    /* 關於我們區塊 */
-    .fuguocycle-wrapper .story-section {
-        background: white;
-        padding: 40px;
-        border-radius: 12px;
-        margin-bottom: 40px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .fuguocycle-wrapper .story-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-top: 30px;
-    }
-
-    .fuguocycle-wrapper .story-card {
-        background: var(--light-gray);
-        padding: 30px;
-        border-radius: 8px;
-        border-top: 4px solid var(--accent-orange);
-    }
-
-    .fuguocycle-wrapper .story-card h3 {
-        color: var(--accent-orange);
-        margin-top: 0;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
-    }
-
-    /* 服務項目區塊 */
-    .fuguocycle-wrapper .services-section {
-        text-align: center;
-    }
-
-    .fuguocycle-wrapper .services-section h2 {
-        font-size: 2em;
-        margin-bottom: 30px;
-        color: #1a1a1a;
-    }
-
-    .fuguocycle-wrapper .services-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-    }
-
-    .fuguocycle-wrapper .service-item {
-        background: white;
-        padding: 30px 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        transition: transform 0.3s ease;
-    }
-
-    .fuguocycle-wrapper .service-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-    }
-
-    .fuguocycle-wrapper .service-icon {
-        font-size: 2.5em;
-        margin-bottom: 15px;
-    }
-
-    .fuguocycle-wrapper .service-item h4 {
-        margin: 0 0 10px 0;
-        font-size: 1.2em;
-        color: var(--primary-blue);
-    }
-
-    /* 響應式設計 */
-    @media (max-width: 768px) {
-        .fuguocycle-wrapper .story-grid {
-            grid-template-columns: 1fr;
-        }
-        .fuguocycle-wrapper .header-banner h1 {
-            font-size: 2em;
-        }
-        .fuguocycle-wrapper .giant-dealer-section {
-            padding: 20px;
-        }
-    }
-</style>
-
-<div class="fuguocycle-wrapper">
+  <!-- 關於我們主要內容容器 -->
+  <main class="about-wrapper">
     
-    <!-- 頂部橫幅 -->
-    <header class="header-banner">
-        <div class="giant-badge">GIANT 捷安特授權經銷商</div>
-        <h1>富國腳踏車店</h1>
-        <p class="subtitle">SINCE 1980s | 三鶯地區的單車守護者</p>
-        <p>修車不只是鎖緊螺絲，更是鎖緊人與人之間的信任與安全。</p>
-        <div style="margin-top: 20px; font-size: 0.9em; color: #aaa;">
-            📍 鶯歌區鶯桃路182巷22號 | 📞 02-26795485
-        </div>
+    <!-- 頂部英雄橫幅 -->
+    <header class="about-hero">
+      <div class="giant-badge">GIANT 捷安特授權經銷商</div>
+      <h1>富國腳踏車店</h1>
+      <p class="subtitle">SINCE 1980s | 三鶯地區的單車守護者</p>
+      <p class="hero-quote">「修車不只是鎖緊螺絲，更是鎖緊人與人之間的信任與安全。」</p>
+      <div class="contact-info">
+        📍 營業地址：新北市鶯歌區鶯桃路182巷22號 ｜ 📞 服務專線：02-26795485
+      </div>
     </header>
 
     <!-- 捷安特經銷商特色區塊 -->
-    <section class="giant-dealer-section">
-        <h2>🚲 捷安特官方授權，給您最頂級的騎乘體驗</h2>
-        <p>
-            富國腳踏車店不僅是三鶯地區的在地老字號，更是國際知名品牌<strong>「捷安特 GIANT」的官方授權經銷商</strong>。我們深知每位騎士的需求，提供捷安特全系列車款的展示與販售：
-        </p>
-        <ul style="line-height: 2;">
-            <li><strong>完整車款選擇：</strong> 從適合全家大小的休閒代步車、兒童滑步車，到專業級的公路車、登山車與最熱門的電動輔助自行車(e-Bike)，應有盡有。</li>
-            <li><strong>原廠技術支援：</strong> 結合我們傳承四十年的維修硬底子與捷安特原廠的高階教育訓練，確保您的愛車受到最專業的呵護。</li>
-            <li><strong>安心原廠保固：</strong> 購車即享捷安特原廠完善的保固與售後服務，讓您買得安心、騎得放心。</li>
-        </ul>
+    <section class="about-card giant-dealer-section">
+      <h2>🚲 捷安特官方授權，給您最頂級的騎乘體驗</h2>
+      <p>
+        富國腳踏車店不僅是三鶯地區的在地老字號，更是國際知名品牌<strong>「捷安特 GIANT」的官方授權經銷商</strong>。我們深知每位騎士的需求，提供捷安特全系列車款的展示與販售：
+      </p>
+      <ul>
+        <li><strong>完整車款選擇：</strong> 從適合全家大小的休閒代步車、兒童滑步車，到專業級的公路車、登山車與最熱門的電動輔助自行車(e-Bike)，應有盡有。</li>
+        <li><strong>原廠技術支援：</strong> 結合我們傳承四十年的維修硬底子與捷安特原廠的高階教育訓練，確保您的愛車受到最專業的呵護。</li>
+        <li><strong>安心原廠保固：</strong> 購車即享捷安特原廠完善的保固與售後服務，讓您買得安心、騎得放心。</li>
+      </ul>
     </section>
 
     <!-- 品牌故事 -->
-    <section class="story-section">
-        <h2 style="text-align: center; margin-bottom: 10px;">一甲子的職人精神</h2>
-        <p style="text-align: center; color: #666; max-width: 800px; margin: 0 auto 30px auto;">
-            超過四十年的歲月裡，我們見證了單車從早期的實用代步工具，演變為現代人追求健康與突破自我的休閒運動。時光流轉，不變的是我們對每一台車的用心。
-        </p>
-        
-        <div class="story-grid">
-            <div class="story-card">
-                <h3>第一代創辦人｜陳老爹的奠基</h3>
-                <p>從十多歲懵懂的學徒做起，至今已在自行車界打滾超過一甲子。身為三峽自行車協會理事長，陳老爹憑藉著扎實的真功夫與親切的態度，用長滿厚繭的雙手，為在地車友打造了一個最溫暖的單車交流驛站，引領在地單車文化發展。</p>
-            </div>
-            
-            <div class="story-card">
-                <h3>第二代現任老闆｜薪火相傳</h3>
-                <p>從小在充滿輪胎香氣與機械油墨的環境中長大，接棒經營至今已超過二十年。他完美傳承了老爹細膩的手藝，更導入現代化的高階車款維修技術。在保留老店溫度的同時，注入全新活力，繼續陪伴新一代的車友們踩踏向前。</p>
-            </div>
+    <section class="about-card story-section">
+      <h2 class="section-title">一甲子的職人精神</h2>
+      <p class="section-desc">
+        超過四十年的歲月裡，我們見證了單車從早期的實用代步工具，演變為現代人追求健康與突破自我的休閒運動。時光流轉，不變的是我們對每一台車的用心。
+      </p>
+      
+      <div class="story-grid">
+        <div class="story-card">
+          <h3>第一代創辦人｜陳老爹的奠基</h3>
+          <p>從十多歲懵懂的學徒做起，至今已在自行車界打滾超過一甲子。身為三峽自行車協會理事長，陳老爹憑藉著扎實的真功夫與親切的態度，用長滿厚繭的雙手，為在地車友打造了一個最溫暖的單車交流驛站，引領在地單車文化發展。</p>
         </div>
+        
+        <div class="story-card">
+          <h3>第二代現任老闆｜薪火相傳</h3>
+          <p>從小在充滿輪胎香氣與機械油墨的環境中長大，接棒經營至今已超過二十年。他完美傳承了老爹細膩的手藝，更導入現代化的高階車款維修技術。在保留老店溫度的同時，注入全新活力，繼續陪伴新一代的車友們踩踏向前。</p>
+        </div>
+      </div>
     </section>
 
     <!-- 服務項目 -->
-    <section class="services-section">
-        <h2>富國專業服務</h2>
-        <div class="services-grid">
-            <div class="service-item">
-                <div class="service-icon">🛠️</div>
-                <h4>職人專業維修</h4>
-                <p style="font-size: 0.9em; color: #666;">涵蓋日常檢修、變速器精準調整、煞車系統維護與破胎救援，抓漏最精準。</p>
-            </div>
-            
-            <div class="service-item">
-                <div class="service-icon">🧽</div>
-                <h4>全車深度保養</h4>
-                <p style="font-size: 0.9em; color: #666;">提供傳動系統深層清潔上油與車架護理。讓愛車煥然一新，延長壽命。</p>
-            </div>
-            
-            <div class="service-item">
-                <div class="service-icon">🚲</div>
-                <h4>各式新車販售</h4>
-                <p style="font-size: 0.9em; color: #666;">捷安特全車系及各大品牌，從休閒代步到進階公路車，提供最實在購車建議。</p>
-            </div>
-            
-            <div class="service-item">
-                <div class="service-icon">⚙️</div>
-                <h4>零配件升級改裝</h4>
-                <p style="font-size: 0.9em; color: #666;">提供輪組升級、各式單車精品配件選購。為愛車注入新靈魂，打造專屬風格。</p>
-            </div>
+    <section class="about-card services-section">
+      <h2 class="section-title">富國專業服務</h2>
+      <div class="services-grid">
+        <div class="service-item">
+          <div class="service-icon">🛠️</div>
+          <h4>職人專業維修</h4>
+          <p>涵蓋日常檢修、變速器精準調整、煞車系統維護與破胎救援，抓漏最精準。</p>
         </div>
+        
+        <div class="service-item">
+          <div class="service-icon">🧽</div>
+          <h4>全車深度保養</h4>
+          <p>提供傳動系統深層清潔上油與車架護理。讓愛車煥然一新，延長壽命。</p>
+        </div>
+        
+        <div class="service-item">
+          <div class="service-icon">🚲</div>
+          <h4>各式新車販售</h4>
+          <p>捷安特全車系及各大品牌，從休閒代步到進階公路車，提供最實在購車建議。</p>
+        </div>
+        
+        <div class="service-item">
+          <div class="service-icon">⚙️</div>
+          <h4>零配件升級改裝</h4>
+          <p>提供輪組升級、各式單車精品配件選購。為愛車注入新靈魂，打造專屬風格。</p>
+        </div>
+      </div>
     </section>
     
-    <div style="text-align: center; margin-top: 40px; color: #999; font-size: 0.8em;">
-        — 獻給將一生奉獻給自行車的職人陳老爹 —
-    </div>
+    <footer class="about-footer-tribute">
+      — 獻給將一生奉獻給自行車的職人陳老爹 —
+    </footer>
 
-</div>
+  </main>
+
+</body>
+</html>
