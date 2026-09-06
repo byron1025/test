@@ -58,6 +58,7 @@
       text-align: center;
       font-weight: bold;
       display: none;
+      word-break: break-all;
     }
   </style>
 </head>
@@ -131,15 +132,11 @@
         return;
       }
 
-      if (file.size > 5 * 1024 * 1024) {
-        alert("圖片檔案過大，請選擇 5MB 以下的照片！");
-        return;
-      }
-
+      // 提示處理中
       statusMsg.style.display = "block";
       statusMsg.style.backgroundColor = "#e0f2fe";
       statusMsg.style.color = "#0369a1";
-      statusMsg.innerHTML = "⏳ 正在處理照片並上傳中，請稍候...";
+      statusMsg.innerHTML = "⏳ 正在處理照片並發送中...";
       submitBtn.disabled = true;
 
       const reader = new FileReader();
@@ -148,7 +145,7 @@
         submitBtn.disabled = false;
         statusMsg.style.backgroundColor = "#fee2e2";
         statusMsg.style.color = "#b91c1c";
-        statusMsg.innerHTML = "❌ 讀取照片檔案失敗，請重試！";
+        statusMsg.innerHTML = "❌ 讀取照片失敗！";
       };
 
       reader.onload = function(evt) {
@@ -169,15 +166,11 @@
 
           fetch(BASE_GAS_URL, {
             method: "POST",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8"
-            },
             body: JSON.stringify(payload)
           })
           .then(res => res.json())
           .then(data => {
             submitBtn.disabled = false;
-            
             if (data.status === "success") {
               statusMsg.style.backgroundColor = "#dcfce7";
               statusMsg.style.color = "#15803d";
@@ -194,13 +187,15 @@
             submitBtn.disabled = false;
             statusMsg.style.backgroundColor = "#fee2e2";
             statusMsg.style.color = "#b91c1c";
-            statusMsg.innerHTML = "❌ 傳送失敗或逾時，請檢查網路！";
+            statusMsg.innerHTML = "❌ 發送失敗：" + err.toString();
           });
 
         } catch (err) {
           console.error(err);
           submitBtn.disabled = false;
-          alert("照片處理失敗：" + err.message);
+          statusMsg.style.backgroundColor = "#fee2e2";
+          statusMsg.style.color = "#b91c1c";
+          statusMsg.innerHTML = "❌ 處理過程出錯：" + err.message;
         }
       };
 
