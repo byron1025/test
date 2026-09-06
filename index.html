@@ -99,6 +99,14 @@
       margin-bottom: 3rem;
     }
 
+    /* 車款卡片價格樣式微調 */
+    .card-price {
+      color: #dc2626;
+      font-weight: bold;
+      font-size: 1.05rem;
+      margin: 6px 0;
+    }
+
     /* 最新消息預覽卡片 */
     .news-preview-grid {
       display: grid;
@@ -237,6 +245,7 @@
                     <div class="card-body">
                       <span class="tag">${item.category || '精選車款'}</span>
                       <h3 class="card-title">${item.name || ''}</h3>
+                      ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
                       <p class="card-desc">${item.specs || ''}</p>
                       <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
                     </div>
