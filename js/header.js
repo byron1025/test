@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const headerHTML = `
     <header class="site-header">
       <div class="header-container">
-        <!-- 店名 Logo 與右側社交/商家檔案圖示群 -->
+        <!-- 品牌 Logo 與 FB/LINE/地圖 -->
         <div class="brand-area">
           <a href="index.html" class="brand-logo">
             🚲 捷安特<span>富國店</span>
@@ -16,14 +16,14 @@ document.addEventListener("DOMContentLoaded", function() {
           </div>
         </div>
 
-        <!-- 📱 手機版漢堡選單按鈕 -->
+        <!-- 📱 手機版漢堡按鈕 -->
         <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="切換選單">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
 
-        <!-- 導覽連結區域 -->
+        <!-- 導覽選單區域 -->
         <div class="nav-wrapper" id="navWrapper">
           <nav class="nav-links">
             <a href="index.html" class="${currentPath === 'index.html' ? 'active' : ''}">首頁</a>
@@ -44,7 +44,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const navWrapper = document.getElementById("navWrapper");
 
   if (menuBtn && navWrapper) {
-    menuBtn.addEventListener("click", function() {
+    menuBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
       menuBtn.classList.toggle("active");
       navWrapper.classList.toggle("open");
     });
