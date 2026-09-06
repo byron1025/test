@@ -6,20 +6,51 @@
   <title>捷安特富國自行車店 - 官方網站</title>
   <link rel="stylesheet" href="./css/style.css">
   <style>
-    /* 1. 店家頂部 Banner 區塊樣式 */
-    .hero-banner {
+    /* 1. 店家介紹文字區塊樣式 */
+    .store-intro-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2.5rem;
-      align-items: center;
     }
-    .hero-banner img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      object-fit: cover;
+    .intro-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid #0284c7;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .intro-card h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      color: #0284c7;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .intro-card p, .intro-card ul {
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+      padding-left: 0;
+    }
+    .intro-card ul {
+      list-style: none;
+    }
+    .intro-card ul li {
+      margin-bottom: 0.4rem;
+      position: relative;
+      padding-left: 1.2rem;
+    }
+    .intro-card ul li::before {
+      content: "✔";
+      position: absolute;
+      left: 0;
+      color: #0284c7;
+      font-weight: bold;
     }
 
     /* 區塊標題 */
@@ -56,11 +87,6 @@
       padding: 1.25rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       border: 1px solid #e2e8f0;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .news-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
     .news-header {
       display: flex;
@@ -148,14 +174,31 @@
 </head>
 <body>
 
-  <!-- 導覽列（由 js/header.js 動態注入） -->
-
   <main class="container" style="padding-top: 2rem;">
 
-    <!-- 頂部店家介紹橫幅 (補回三張簡介圖片區塊) -->
-    <section class="hero-banner">
-      <img src="./images/intro-left.png" alt="捷安特富國店 關於我們與服務項目" onerror="this.style.display='none'">
-      <img src="./images/intro-right.png" alt="捷安特富國店 店內特色" onerror="this.style.display='none'">
+    <!-- 店家介紹文字區塊 (文字版) -->
+    <section class="store-intro-grid">
+      <div class="intro-card">
+        <h3>ℹ️ 關於我們</h3>
+        <p>捷安特富國店深耕在地，提供全方位的專業單車銷售、維護與升級服務。不論是通勤、休閒運動或專業競賽，我們都以熱忱為您打造最優質的騎乘體驗。</p>
+      </div>
+
+      <div class="intro-card">
+        <h3>🛠️ 服務項目</h3>
+        <ul>
+          <li>專業新車銷售與客製化調整</li>
+          <li>全車精細保養與安全健檢</li>
+          <li>各式零件升級與維修服務</li>
+          <li>國民旅遊卡特約商店</li>
+        </ul>
+      </div>
+
+      <div class="intro-card">
+        <h3>⏰ 營業時間</h3>
+        <p><strong>週一至週六：</strong> 11:00 - 21:00<br>
+           <strong>週日：</strong> 公休<br>
+           <strong>門市地址：</strong> 歡迎蒞臨門市親臨體驗與試乘諮詢</p>
+      </div>
     </section>
 
     <!-- 最新消息與公告區塊 -->
@@ -190,13 +233,11 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // 統一使用的 API 部署 Endpoint
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
       
       const newsContainer = document.getElementById("news-container");
       const bikesContainer = document.getElementById("featured-bikes-container");
 
-      // 抓取後端資料
       fetch(BASE_GAS_URL + "?v=" + Date.now())
         .then(res => res.json())
         .then(data => {
@@ -207,7 +248,6 @@
           if (!Array.isArray(newsList) || newsList.length === 0) {
             newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告消息。</div>';
           } else {
-            // 抓取最新 3 筆公告
             const displayNews = newsList.slice(0, 3);
             newsContainer.innerHTML = displayNews.map(item => `
               <article class="news-card">
