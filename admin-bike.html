@@ -114,8 +114,7 @@
   <script src="./js/header.js"></script>
 
   <script>
-    // GAS 部署網址
-    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
+    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwNi8ra2hQmIkGLCf-PznhTfNozWh6xmYkt6yhmem86oTcYi89lfP5CuOrAIPyzAHA1/execc";
 
     const form = document.getElementById("bike-form");
     const statusMsg = document.getElementById("status-message");
@@ -132,13 +131,11 @@
         return;
       }
 
-      // 檔案大小限制 5MB
       if (file.size > 5 * 1024 * 1024) {
         alert("圖片檔案過大，請選擇 5MB 以下的照片！");
         return;
       }
 
-      // 顯示上傳中狀態
       statusMsg.style.display = "block";
       statusMsg.style.backgroundColor = "#e0f2fe";
       statusMsg.style.color = "#0369a1";
@@ -156,10 +153,8 @@
 
       reader.onload = function(evt) {
         try {
-          // 取得純 Base64 字串
           const rawBase64 = evt.target.result.split(',')[1];
 
-          // 📦 封裝傳送資料
           const payload = {
             action: "add_bike",
             password: document.getElementById("admin-password").value,
@@ -179,16 +174,17 @@
           .then(res => res.json())
           .then(data => {
             submitBtn.disabled = false;
-            // 判斷回傳結果（相容 status 或訊息包含"成功"字眼）
+            
+            // 判斷 status 或 message
             if (data.status === "success" || (data.message && data.message.includes("成功"))) {
-              statusMsg.style.backgroundColor = "#dcfce7"; // 淡綠色背景
-              statusMsg.style.color = "#15803d";           // 深綠色文字
-              statusMsg.innerHTML = "✅ " + (data.message || "車款與圖片新增成功！");
+              statusMsg.style.backgroundColor = "#dcfce7";
+              statusMsg.style.color = "#15803d";
+              statusMsg.innerHTML = "✅ 車款與圖片新增成功！";
               form.reset();
             } else {
-              statusMsg.style.backgroundColor = "#fee2e2"; // 淡紅色背景
-              statusMsg.style.color = "#b91c1c";           // 深紅色文字
-              statusMsg.innerHTML = "❌ " + data.message;
+              statusMsg.style.backgroundColor = "#fee2e2";
+              statusMsg.style.color = "#b91c1c";
+              statusMsg.innerHTML = "❌ " + (data.message || "新增失敗，請檢查密碼！");
             }
           })
           .catch(err => {
@@ -196,13 +192,13 @@
             submitBtn.disabled = false;
             statusMsg.style.backgroundColor = "#fee2e2";
             statusMsg.style.color = "#b91c1c";
-            statusMsg.innerHTML = "❌ 連線失敗或請求逾時，請檢查網路！";
+            statusMsg.innerHTML = "❌ 連線失敗或傳送超時，請重試！";
           });
 
         } catch (err) {
           console.error(err);
           submitBtn.disabled = false;
-          alert("照片轉換錯誤：" + err.message);
+          alert("照片處理失敗：" + err.message);
         }
       };
 
