@@ -14,86 +14,6 @@
       color: var(--text-muted, #64748b);
       margin-bottom: 2rem;
     }
-    /* 分類篩選按鈕列 */
-    .filter-bar {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-    .filter-btn {
-      background: white;
-      border: 2px solid #cbd5e1;
-      color: var(--text-dark, #1e293b);
-      padding: 8px 18px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.2s;
-    }
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--brand-blue, #0284c7);
-      color: white;
-      border-color: var(--brand-blue, #0284c7);
-    }
-    /* 車款列表 Grid */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    .card-price {
-      color: #dc2626;
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin: 6px 0;
-    }
-  </style>
-</head>
-<body>
-
-  <main class="container" style="padding-top: 2rem;">
-    <h1 class="page-title">🚲 精選車款與目錄</h1>
-    <p class="page-subtitle">歡迎親臨門市試乘與諮詢，我們提供最專業的選車與調整服務</p>
-
-    <!-- 分類篩選按鈕區 -->
-    <div class="filter-bar">
-      <button class="filter-btn active" data-category="all">全部車種</button>
-      <button class="filter-btn" data-category="公路車">公路車</button>
-      <button class="filter-btn" data-category="登山車">登山車</button>
-      <button class="filter-btn" data-category="運動健身">運動健身車</button>
-      <button class="filter-btn" data-category="電輔車">電輔車</button>
-      <button class="filter-btn" data-category="童車">童車與休閒車</button>
-    </div>
-
-    <!-- 車款列表容器 -->
-    <div class="products-grid" id="products-container">
-      <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
-        🔄 正在載入車款資料...
-      </div>
-    </div>
-  </main>
-
-  <script src="./js/header.js"></script>
-
-  <script>
-    <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精選車款與目錄 - 捷安特富國自行車店</title>
-  <link rel="stylesheet" href="./css/style.css">
-  <style>
-    .page-title {
-      color: var(--primary-blue, #0284c7);
-      margin-bottom: 0.5rem;
-    }
-    .page-subtitle {
-      color: var(--text-muted, #64748b);
-      margin-bottom: 2rem;
-    }
     .filter-bar {
       display: flex;
       gap: 0.75rem;
@@ -229,14 +149,6 @@
           }
         });
       });
-    });
-  </script>
-</body>
-</html>
-          }
-        });
-      });
-
     });
   </script>
 </body>
