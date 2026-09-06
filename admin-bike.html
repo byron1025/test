@@ -50,17 +50,6 @@
       grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .checkbox-group input {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-    }
     .btn-submit {
       width: 100%;
       background: #1565c0;
@@ -143,12 +132,6 @@
           <textarea id="features" rows="4" placeholder="例如：採用 16 段 Shimano 變速系統，適合平路巡航。" required></textarea>
         </div>
 
-        <!-- 試乘選項 -->
-        <div class="form-group checkbox-group">
-          <input type="checkbox" id="testRide" checked>
-          <label for="testRide" style="margin-bottom:0; cursor:pointer;">🔴 提供門市預約試乘</label>
-        </div>
-
         <!-- 管理員密碼 -->
         <div class="form-group" style="margin-top:15px;">
           <label for="password">🔒 管理員密碼</label>
@@ -165,8 +148,8 @@
   <script src="./js/header.js"></script>
 
   <script>
-    // ⚠️ 請確認此處為您的 GAS 部署網址
-    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
+    // 🔗 您的 GAS 最新部署網址
+    const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbzUKhJDRzaQt9KOBC6JNcyh5ECx9KouVOIkkJYmtsTZW2IzcarqCbl2kVt9HeqkaQ6c/exec";
 
     let base64Image = "";
     let imageName = "";
@@ -204,7 +187,6 @@
         price: document.getElementById('price').value,
         name: document.getElementById('name').value,
         features: document.getElementById('features').value,
-        testRide: document.getElementById('testRide').checked,
         imageBase64: base64Image,
         imageName: imageName,
         password: document.getElementById('password').value
