@@ -6,16 +6,44 @@
   <title>捷安特富國自行車店 - 官方網站</title>
   <link rel="stylesheet" href="./css/style.css">
   <style>
-    /* 版面與區塊樣式 */
+    /* 1. 店家頂部 Banner 區塊樣式 */
+    .hero-banner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      align-items: center;
+    }
+    .hero-banner img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      object-fit: cover;
+    }
+
+    /* 區塊標題 */
     .section-title {
       color: var(--primary-blue, #0284c7);
       margin-bottom: 1.5rem;
       border-bottom: 2px solid #e2e8f0;
       padding-bottom: 0.5rem;
       font-size: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .more-link {
+      font-size: 0.95rem;
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .more-link:hover {
+      text-decoration: underline;
     }
 
-    /* 最新消息網格 */
+    /* 2. 最新消息區塊樣式 */
     .news-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -28,6 +56,11 @@
       padding: 1.25rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       border: 1px solid #e2e8f0;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
     }
     .news-header {
       display: flex;
@@ -49,7 +82,7 @@
     }
     .news-title {
       margin: 0 0 0.5rem 0;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       color: #1e293b;
     }
     .news-content {
@@ -59,7 +92,7 @@
       margin: 0;
     }
 
-    /* 車款卡片網格 */
+    /* 3. 車款卡片網格樣式 */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -115,10 +148,22 @@
 </head>
 <body>
 
+  <!-- 導覽列（由 js/header.js 動態注入） -->
+
   <main class="container" style="padding-top: 2rem;">
-    <!-- 最新消息區塊 -->
-    <section>
-      <h2 class="section-title">📢 最新消息與公告</h2>
+
+    <!-- 頂部店家介紹橫幅 (補回三張簡介圖片區塊) -->
+    <section class="hero-banner">
+      <img src="./images/intro-left.png" alt="捷安特富國店 關於我們與服務項目" onerror="this.style.display='none'">
+      <img src="./images/intro-right.png" alt="捷安特富國店 店內特色" onerror="this.style.display='none'">
+    </section>
+
+    <!-- 最新消息與公告區塊 -->
+    <section id="news-section">
+      <h2 class="section-title">
+        <span>📢 最新消息與公告</span>
+        <a href="news.html" class="more-link">查看更多公告 ➔</a>
+      </h2>
       <div class="news-grid" id="news-container">
         <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
           🔄 正在載入最新公告...
@@ -127,38 +172,44 @@
     </section>
 
     <!-- 熱門精選車款區塊 -->
-    <section>
-      <h2 class="section-title">🚲 店長精選車款</h2>
+    <section id="products-section">
+      <h2 class="section-title">
+        <span>🚲 店長精選車款</span>
+        <a href="products.html" class="more-link">瀏覽全部車款 ➔</a>
+      </h2>
       <div class="products-grid" id="featured-bikes-container">
         <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
           🔄 正在載入精選車款...
         </div>
       </div>
     </section>
+
   </main>
 
   <script src="./js/header.js"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // 後端 API 部署網址（對齊新增車款後台）
+      // 統一使用的 API 部署 Endpoint
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
       
       const newsContainer = document.getElementById("news-container");
       const bikesContainer = document.getElementById("featured-bikes-container");
 
-      // 請求資料
+      // 抓取後端資料
       fetch(BASE_GAS_URL + "?v=" + Date.now())
         .then(res => res.json())
         .then(data => {
-          console.log("首頁收到資料:", data);
+          console.log("首頁收到 API 資料:", data);
 
           // 1. 渲染最新消息
           const newsList = data.news || [];
-          if (newsList.length === 0) {
+          if (!Array.isArray(newsList) || newsList.length === 0) {
             newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告消息。</div>';
           } else {
-            newsContainer.innerHTML = newsList.map(item => `
+            // 抓取最新 3 筆公告
+            const displayNews = newsList.slice(0, 3);
+            newsContainer.innerHTML = displayNews.map(item => `
               <article class="news-card">
                 <div class="news-header">
                   <span class="news-tag">${item.category || '公告'}</span>
@@ -170,9 +221,9 @@
             `).join('');
           }
 
-          // 2. 渲染精選車款 (前 6 筆)
+          // 2. 渲染精選車款
           const bikeList = data.bikes || data.products || [];
-          if (bikeList.length === 0) {
+          if (!Array.isArray(bikeList) || bikeList.length === 0) {
             bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無精選車款資料。</div>';
           } else {
             const featuredList = bikeList.slice(0, 6);
@@ -200,8 +251,8 @@
         })
         .catch(err => {
           console.error("首頁資料載入失敗:", err);
-          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">公告載入失敗。</div>';
-          bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款載入失敗。</div>';
+          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">公告載入失敗，請確認後端部署。</div>';
+          bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款載入失敗，請確認後端部署。</div>';
         });
     });
   </script>
