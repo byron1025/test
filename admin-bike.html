@@ -3,83 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>車種新增管理後台 - 捷安特富國店</title>
+  <title>車款管理後台 - 捷安特富國自行車店</title>
   <link rel="stylesheet" href="./css/style.css">
   <style>
     .admin-container {
-      max-width: 720px;
-      margin: 30px auto;
+      max-width: 600px;
+      margin: 2rem auto;
       background: #ffffff;
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      border-top: 6px solid #1565c0;
-    }
-    .admin-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-    .admin-header h2 {
-      color: #1565c0;
-      margin-bottom: 6px;
+      padding: 2rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 2px solid var(--brand-blue);
     }
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 1.25rem;
     }
     .form-group label {
       display: block;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #1e293b;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: var(--primary-blue);
     }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 12px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
       font-size: 1rem;
       box-sizing: border-box;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: #1565c0;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15);
-    }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
     .btn-submit {
       width: 100%;
-      background: #1565c0;
-      color: #ffffff;
-      padding: 14px;
+      background-color: var(--brand-blue);
+      color: white;
+      padding: 0.85rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 1.1rem;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s ease;
-      margin-top: 10px;
+      transition: background 0.2s;
     }
-    .btn-submit:hover { background: #0d47a1; }
-    .btn-submit:disabled { background: #94a3b8; cursor: not-allowed; }
-    #msgAlert {
-      margin-top: 18px;
-      padding: 12px;
-      border-radius: 8px;
-      display: none;
+    .btn-submit:hover {
+      background-color: var(--primary-blue);
+    }
+    .btn-submit:disabled {
+      background-color: #94a3b8;
+      cursor: not-allowed;
+    }
+    #status-message {
+      margin-top: 1.25rem;
+      padding: 0.85rem;
+      border-radius: 6px;
       text-align: center;
       font-weight: bold;
-    }
-    .msg-success { background: #dcfce7; color: #15803d; }
-    .msg-error { background: #fee2e2; color: #b91c1c; }
-    #imagePreview img {
-      max-height: 180px;
-      border-radius: 8px;
-      margin-top: 8px;
-      border: 1px solid #cbd5e1;
+      display: none;
     }
   </style>
 </head>
@@ -87,148 +65,124 @@
 
   <main class="container">
     <div class="admin-container">
-      <div class="admin-header">
-        <h2>🚲 車種與新車款新增系統</h2>
-        <p style="color: #64748b; font-size: 0.9em;">選擇照片與填寫資料，自動上傳至 Google Drive 並寫入 Google Sheet</p>
-      </div>
-
-      <form id="bikeForm">
-        <!-- 分類與售價 -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="category">🏷️ 車種類別</label>
-            <select id="category" required>
-              <option value="公路車">公路車 (Road)</option>
-              <option value="登山車">登山車 (Mountain)</option>
-              <option value="運動健身車">運動健身車 (Fitness)</option>
-              <option value="電輔車">電動輔助自行車 (E-Bike)</option>
-              <option value="童車與休閒車">童車與休閒車 (Kids & City)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="price">💰 建議售價 (元)</label>
-            <input type="text" id="price" placeholder="例如：NT$ 25,800" required>
-          </div>
-        </div>
-
-        <!-- 車款名稱 -->
+      <h2 style="color: var(--primary-blue); margin-bottom: 1.5rem; text-align: center;">🚲 新增試乘車款 / 熱門車款</h2>
+      
+      <form id="bike-form">
         <div class="form-group">
-          <label for="name">🚲 車款完整名稱</label>
-          <input type="text" id="name" placeholder="例如：TCR ADVANCED 2 DISC" required>
+          <label for="bike-category">🏷️ 車款分類</label>
+          <select id="bike-category" required>
+            <option value="公路車">公路車 (Road)</option>
+            <option value="電輔車">電輔車 (E-Bike)</option>
+            <option value="登山車">登山車 (MTB)</option>
+            <option value="平把運動車">平把運動車 / 休閒車</option>
+            <option value="童車">童車 (Youth)</option>
+          </select>
         </div>
 
-        <!-- 照片上傳區塊 -->
         <div class="form-group">
-          <label for="imageFile">📷 選擇車款照片 (點選上傳手機照片或電腦圖片)</label>
-          <input type="file" id="imageFile" accept="image/*" required>
-          <div id="imagePreview" style="display:none;">
-            <img id="previewImg" src="">
-          </div>
+          <label for="bike-name">🚲 車款名稱</label>
+          <input type="text" id="bike-name" placeholder="例如：TCR ADVANCED PRO 0" required>
         </div>
 
-        <!-- 規格特色 -->
         <div class="form-group">
-          <label for="features">📝 車款特色與規格描述</label>
-          <textarea id="features" rows="4" placeholder="例如：採用 16 段 Shimano 變速系統，適合平路巡航。" required></textarea>
+          <label for="bike-price">💰 車款價格 / 參考售價</label>
+          <input type="text" id="bike-price" placeholder="例如：NT$ 128,000 或 歡迎門市洽詢" required>
         </div>
 
-        <!-- 管理員密碼 -->
-        <div class="form-group" style="margin-top:15px;">
-          <label for="password">🔒 管理員密碼</label>
-          <input type="password" id="password" placeholder="請輸入管理員密碼 (預設: 1234)" required>
+        <div class="form-group">
+          <label for="bike-image">📷 上傳車款照片</label>
+          <input type="file" id="bike-image" accept="image/*" required>
         </div>
 
-        <button type="submit" class="btn-submit" id="submitBtn">🚀 上傳照片並新增車款</button>
+        <div class="form-group">
+          <label for="bike-specs">📝 車款特色與規格描述</label>
+          <textarea id="bike-specs" rows="4" placeholder="例如：超輕量碳纖維車架、Shimano Ultegra Di2 電子變速..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="admin-password">🔒 管理員密碼</label>
+          <input type="password" id="admin-password" placeholder="請輸入後台密碼" required>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">🚀 上傳照片並新增車款</button>
       </form>
 
-      <div id="msgAlert"></div>
+      <div id="status-message"></div>
     </div>
   </main>
 
   <script src="./js/header.js"></script>
 
   <script>
-    // 🔗 您的 GAS 最新部署網址
+    // 最新部署的 GAS 網址
     const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
 
-    let base64Image = "";
-    let imageName = "";
+    const form = document.getElementById("bike-form");
+    const statusMsg = document.getElementById("status-message");
+    const submitBtn = document.getElementById("submit-btn");
 
-    // 處理照片選擇與預覽
-    document.getElementById('imageFile').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      imageName = file.name;
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        base64Image = event.target.result;
-        document.getElementById('previewImg').src = base64Image;
-        document.getElementById('imagePreview').style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // 送出表單
-    document.getElementById('bikeForm').addEventListener('submit', function(e) {
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
 
-      if (!base64Image) {
-        alert("請先選擇車款照片！");
+      const fileInput = document.getElementById("bike-image");
+      const file = fileInput.files[0];
+
+      if (!file) {
+        alert("請選擇照片！");
         return;
       }
 
-      const submitBtn = document.getElementById('submitBtn');
-      const msgAlert = document.getElementById('msgAlert');
-
-      const payload = {
-        action: "add_bike",
-        category: document.getElementById('category').value,
-        price: document.getElementById('price').value,
-        name: document.getElementById('name').value,
-        features: document.getElementById('features').value,
-        imageBase64: base64Image,
-        imageName: imageName,
-        password: document.getElementById('password').value
-      };
-
+      // 顯示上傳中狀態
+      statusMsg.style.display = "block";
+      statusMsg.style.backgroundColor = "#e0f2fe";
+      statusMsg.style.color = "#0369a1";
+      statusMsg.innerHTML = "⏳ 照片處理與資料上傳中，請稍候...";
       submitBtn.disabled = true;
-      submitBtn.textContent = "⏳ 照片上傳中，請稍候...";
-      msgAlert.style.display = "none";
 
-      fetch(BASE_GAS_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "🚀 上傳照片並新增車款";
-        msgAlert.style.display = "block";
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function() {
+        const rawBase64 = reader.result.split(',')[1];
 
-        if (data.success) {
-          msgAlert.className = "msg-success";
-          msgAlert.textContent = "🎉 " + data.message;
-          // 清空表單欄位
-          document.getElementById('name').value = "";
-          document.getElementById('price').value = "";
-          document.getElementById('features').value = "";
-          document.getElementById('imageFile').value = "";
-          document.getElementById('imagePreview').style.display = "none";
-          base64Image = "";
-        } else {
-          msgAlert.className = "msg-error";
-          msgAlert.textContent = "❌ " + data.message;
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        submitBtn.disabled = false;
-        submitBtn.textContent = "🚀 上傳照片並新增車款";
-        msgAlert.style.display = "block";
-        msgAlert.className = "msg-error";
-        msgAlert.textContent = "❌ 連線失敗，請檢查網路或 GAS 設定！";
-      });
+        // 📦 傳送給 GAS 的資料（明確指定 action: "add_bike"）
+        const payload = {
+          action: "add_bike",
+          password: document.getElementById("admin-password").value,
+          category: document.getElementById("bike-category").value,
+          name: document.getElementById("bike-name").value,
+          price: document.getElementById("bike-price").value,
+          specs: document.getElementById("bike-specs").value,
+          fileName: file.name,
+          mimeType: file.type,
+          fileData: rawBase64
+        };
+
+        fetch(BASE_GAS_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+          submitBtn.disabled = false;
+          if (data.status === "success") {
+            statusMsg.style.backgroundColor = "#dcfce7";
+            statusMsg.style.color = "#15803d";
+            statusMsg.innerHTML = "✅ " + data.message;
+            form.reset();
+          } else {
+            statusMsg.style.backgroundColor = "#fee2e2";
+            statusMsg.style.color = "#b91c1c";
+            statusMsg.innerHTML = "❌ " + data.message;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          submitBtn.disabled = false;
+          statusMsg.style.backgroundColor = "#fee2e2";
+          statusMsg.style.color = "#b91c1c";
+          statusMsg.innerHTML = "❌ 連線失敗，請檢查網路或 GAS 設定！";
+        });
+      };
     });
   </script>
 </body>
