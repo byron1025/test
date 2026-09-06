@@ -10,17 +10,31 @@
   <link rel="stylesheet" href="./css/style.css">
   
   <style>
+    /* 🎯 修正：強制指定高對比藍色背景與清晰白字，解決顏色太淡問題 */
     .page-title-section {
-      background: var(--primary-blue);
-      color: white;
+      background: linear-gradient(135deg, #0288d1 0%, #039be5 100%) !important;
+      color: #ffffff !important;
       text-align: center;
       padding: 2.5rem 1rem;
-      border-radius: var(--radius);
+      border-radius: 12px;
       margin-bottom: 2rem;
-      border-bottom: 5px solid var(--accent-yellow);
+      border-bottom: 5px solid #fbc02d !important;
+      box-shadow: 0 4px 15px rgba(2, 136, 209, 0.2);
     }
-    .page-title-section h1 { font-size: 2rem; margin-bottom: 0.5rem; }
-    .page-title-section p { color: #cbd5e1; font-size: 1rem; }
+
+    .page-title-section h1 { 
+      font-size: 2rem !important; 
+      margin-bottom: 0.5rem !important; 
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .page-title-section p { 
+      color: #f0f9ff !important; 
+      font-size: 1.05rem !important;
+      font-weight: 600 !important;
+    }
 
     /* 最新消息卡片清單 */
     .news-list {
@@ -32,12 +46,12 @@
     }
     
     .news-item-card {
-      background: white;
-      border-radius: var(--radius);
+      background: #ffffff;
+      border-radius: 12px;
       padding: 1.5rem;
-      border: 2px solid var(--brand-blue);
-      border-left: 6px solid var(--accent-yellow);
-      box-shadow: var(--shadow);
+      border: 1px solid #e0eef5;
+      border-left: 6px solid #fbc02d;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     .news-header {
@@ -48,8 +62,8 @@
     }
 
     .news-badge {
-      background: var(--accent-red);
-      color: white;
+      background: #ef4444;
+      color: #ffffff;
       font-size: 0.8rem;
       padding: 3px 8px;
       border-radius: 4px;
@@ -57,19 +71,21 @@
     }
 
     .news-date {
-      color: var(--text-muted);
+      color: #0288d1;
+      font-weight: 700;
       font-size: 0.85rem;
     }
 
     .news-title {
       font-size: 1.25rem;
-      color: var(--primary-blue);
+      color: #1e293b;
+      font-weight: 800;
       margin-bottom: 0.75rem;
     }
 
     .news-content {
       font-size: 0.95rem;
-      color: var(--text-dark);
+      color: #334155;
       line-height: 1.6;
       white-space: pre-wrap; /* 保持試算表內的換行格式 */
     }
@@ -97,7 +113,6 @@
     document.addEventListener("DOMContentLoaded", function () {
       const newsContainer = document.getElementById("news-container");
 
-      // ⚠️ 請填寫您的 GAS Web App 部署網址 (/exec 結尾)
       const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbxE7J9m5al15GNVCHFtIZrWd4JjHW8ZVQkay2NyivmBBc93lEm-rPUGZb446Pvs-O5Z/exec";
       const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
 
@@ -111,7 +126,6 @@
 
           newsContainer.innerHTML = "";
 
-          // 💡 反轉陣列 (.reverse())：將最新發布（位於試算表最下方）的消息排在最前面
           const newsList = data.news.slice().reverse();
 
           newsList.forEach(item => {
