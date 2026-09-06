@@ -4,9 +4,17 @@ document.addEventListener("DOMContentLoaded", function() {
   const headerHTML = `
     <header class="site-header">
       <div class="header-container">
-        <a href="index.html" class="brand-logo">
-          🚲 捷安特<span>富國店</span>
-        </a>
+        <!-- 店名 Logo 與右側社交/商家檔案圖示群 -->
+        <div class="brand-area">
+          <a href="index.html" class="brand-logo">
+            🚲 捷安特<span>富國店</span>
+          </a>
+          <div class="brand-socials">
+            <a href="https://facebook.com" target="_blank" title="Facebook 粉專">f</a>
+            <a href="https://line.me" target="_blank" title="官方 LINE">LINE</a>
+            <a href="https://maps.google.com" target="_blank" title="Google 商家檔案">📍</a>
+          </div>
+        </div>
 
         <!-- 📱 手機版漢堡選單按鈕 -->
         <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="切換選單">
@@ -24,11 +32,6 @@ document.addEventListener("DOMContentLoaded", function() {
             <a href="news.html" class="${currentPath === 'news.html' ? 'active' : ''}">最新消息</a>
             <a href="contact.html" class="${currentPath === 'contact.html' ? 'active' : ''}">聯絡與預約</a>
           </nav>
-
-          <div class="header-socials">
-            <a href="https://facebook.com" target="_blank" title="Facebook">f</a>
-            <a href="https://line.me" target="_blank" title="Line">LINE</a>
-          </div>
         </div>
       </div>
     </header>
@@ -36,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   document.body.insertAdjacentHTML("afterbegin", headerHTML);
 
-  // 漢堡選單開關 JS 邏輯
+  // 漢堡選單開關邏輯
   const menuBtn = document.getElementById("mobileMenuBtn");
   const navWrapper = document.getElementById("navWrapper");
 
