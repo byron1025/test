@@ -168,12 +168,14 @@ document.addEventListener("DOMContentLoaded", function () {
         </button>
 
         <!-- 主選單連結 -->
-        <nav class="nav-links" id="nav-menu">
-          <a href="index.html">首頁</a>
-          <a href="products.html">精選車款</a>
-          <a href="news.html">最新消息</a>
-          <a href="contact.html">聯絡與預約</a>
-        </nav>
+     <!-- 主選單連結 -->
+<nav class="nav-links" id="nav-menu">
+  <a href="index.html">首頁</a>
+  <a href="about.html">關於我們</a>
+  <a href="products.html">精選車款</a>
+  <a href="news.html">最新消息</a>
+  <a href="contact.html">聯絡與預約</a>
+</nav>
       </div>
     </header>
   `;
