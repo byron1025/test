@@ -4,205 +4,92 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>捷安特富國自行車店 - 官方網站</title>
-  
-  <meta name="description" content="捷安特富國自行車店（國民旅遊卡特約商店），提供專業單車銷售、電輔車維修與全車健檢保養服務。">
-  <meta property="og:title" content="捷安特富國自行車店 - 專業單車銷售與維修服務">
-  <meta property="og:description" content="國民旅遊卡特約商店，提供全車健檢保養、公路車、電輔車專業諮詢與線上預約服務。">
-  
   <link rel="stylesheet" href="./css/style.css">
-  
   <style>
-    .hero {
-      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-      color: white;
-      text-align: center;
-      padding: 3.5rem 1rem;
-      border-radius: var(--radius);
-      margin-bottom: 2.5rem;
-      border-bottom: 6px solid var(--accent-yellow);
+    /* 首頁最新消息與精選區塊樣式 */
+    .section-title {
+      color: var(--primary-blue, #0284c7);
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
     }
-    .hero h1 { font-size: 2.2rem; margin-bottom: 0.8rem; color: #ffffff; }
-    .hero h1 span { color: var(--accent-yellow); }
-    .hero p {
-      font-size: 1.1rem;
-      color: #cbd5e1;
-      margin-bottom: 1.8rem;
-      max-width: 650px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      background-color: var(--accent-red);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .btn-primary:hover { background-color: var(--accent-red-hover); }
-    
-    .btn-secondary {
-      background-color: transparent;
-      color: var(--accent-yellow);
-      border: 2px solid var(--accent-yellow);
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover {
-      background-color: var(--accent-yellow);
-      color: var(--primary-blue);
-    }
-
-    .features-grid {
+    .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 3rem;
-    }
-    .feature-card {
-      background: white;
-      padding: 1.5rem;
-      border-radius: var(--radius);
-      text-align: center;
-      border: 2px solid var(--brand-blue);
-      box-shadow: var(--shadow);
-    }
-    .feature-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .feature-title { font-size: 1.1rem; color: var(--primary-blue); margin-bottom: 0.3rem; }
-    .feature-desc { font-size: 0.875rem; color: var(--text-muted); }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.2rem;
-    }
-    .section-title-text { font-size: 1.4rem; color: var(--primary-blue); }
-    .more-link { color: var(--brand-blue); font-weight: bold; text-decoration: none; font-size: 0.95rem; }
-    .more-link:hover { text-decoration: underline; }
-
-    /* 精選車款外層容器 */
-    .home-products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.5rem;
       margin-bottom: 3rem;
     }
-
-    /* 車款卡片價格樣式微調 */
+    .news-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .news-tag {
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .news-date {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+    .news-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+      color: #1e293b;
+    }
+    .news-content {
+      color: #64748b;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
     .card-price {
       color: #dc2626;
       font-weight: bold;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       margin: 6px 0;
-    }
-
-    /* 最新消息預覽卡片 */
-    .news-preview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 3rem;
-    }
-    .news-card-sm {
-      background: white;
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      border: 2px solid var(--brand-blue);
-      border-top: 5px solid var(--accent-yellow);
-      box-shadow: var(--shadow);
-    }
-    .news-card-sm .badge {
-      background: var(--accent-red);
-      color: white;
-      font-size: 0.75rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-    .news-card-sm .date { font-size: 0.8rem; color: var(--text-muted); margin-left: 8px; }
-    .news-card-sm h3 { font-size: 1.05rem; color: var(--primary-blue); margin: 8px 0 4px 0; }
-    .news-card-sm p {
-      font-size: 0.875rem;
-      color: var(--text-dark);
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
   </style>
 </head>
 <body>
 
-  <main class="container">
-    <!-- 主視覺區塊 -->
-    <section class="hero">
-      <h1>富國腳踏車店
-        <br>
-        <span>專業售後與維修</span></h1>
-      <p>國民旅遊卡特約商店｜公路車、登山車、電輔車專業保養與客製化調整</p>
-      <div class="hero-btns">
-        <a href="contact.html" class="btn-primary">🔴 線上預約維修 / 試乘</a>
-        <a href="products.html" class="btn-secondary">🚴‍♂️ 瀏覽精選車款</a>
-      </div>
-    </section>
+  <!-- 頁首導覽列將由 header.js 動態注入 -->
 
-    <!-- 四大核心特色 -->
-    <section class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">💳</div>
-        <h3 class="feature-title">國旅卡特約商店</h3>
-        <p class="feature-desc">支援國民旅遊卡刷卡消費與各類專案優惠</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🛠️</div>
-        <h3 class="feature-title">原廠全車健檢</h3>
-        <p class="feature-desc">提供傳動系統深層清洗、變速與煞車精細微調</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <h3 class="feature-title">電輔車專業維修</h3>
-        <p class="feature-desc">智慧電力系統檢測、電池保養與零組件升級</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📐</div>
-        <h3 class="feature-title">精準 Riding Fitting</h3>
-        <p class="feature-desc">依個人騎乘習慣調整騎姿，打造最舒適的騎乘體驗</p>
-      </div>
-    </section>
-
-    <!-- 1. 精選車款展示區 (讀取 GAS) -->
+  <main class="container" style="padding-top: 2rem;">
+    <!-- 最新消息區塊 -->
     <section>
-      <div class="section-header">
-        <h2 class="section-title-text">🚲 精選車款推薦</h2>
-        <a href="products.html" class="more-link">查看全部車款 ➔</a>
-      </div>
-      <div class="home-products-grid" id="home-products-container">
-        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">
-          🔄 正在載入精選車款...
+      <h2 class="section-title">📢 最新消息與公告</h2>
+      <div class="news-grid" id="news-container">
+        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
+          🔄 正在載入最新公告...
         </div>
       </div>
     </section>
 
-    <!-- 2. 最新消息展示區 (讀取 GAS) -->
+    <!-- 熱門精選車款區塊 -->
     <section>
-      <div class="section-header">
-        <h2 class="section-title-text">📢 最新消息與公告</h2>
-        <a href="news.html" class="more-link">查看全部消息 ➔</a>
-      </div>
-      <div class="news-preview-grid" id="home-news-container">
-        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">
-          🔄 正在連線讀取最新消息...
+      <h2 class="section-title">🚲 店長精選車款</h2>
+      <div class="products-grid" id="featured-bikes-container">
+        <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 2rem;">
+          🔄 正在載入精選車款...
         </div>
       </div>
     </section>
@@ -212,87 +99,68 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // 統一使用的後端 API 部署網址（對齊新增表單）
+      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbw6y_Iy4_lUYpRYqpW7nqZSm0tNSeFjyYixMtKkijm6v--OBcPgcwH3Qm4XFtf1NAXz/exec";
       
-      const BASE_GAS_URL = "https://script.google.com/macros/s/AKfycbwrzmyOBpf3GHooeExrj_3DJKRx5fPeQ9uuGA7Ro0qmIzj0OxdTzzCVkXk5czyHlVVG/exec";
-      const fetchUrl = BASE_GAS_URL + (BASE_GAS_URL.includes('?') ? '&' : '?') + "t=" + Date.now();
+      const newsContainer = document.getElementById("news-container");
+      const bikesContainer = document.getElementById("featured-bikes-container");
 
-      const productsContainer = document.getElementById("home-products-container");
-      const newsContainer = document.getElementById("home-news-container");
-
-      // 一次向 GAS 抓取資料 (包含 news 與 bikes)
-      fetch(fetchUrl, { method: 'GET', redirect: 'follow' })
+      // 發送 API 請求抓取最新消息與車款
+      fetch(BASE_GAS_URL + "?v=" + Date.now())
         .then(res => res.json())
         .then(data => {
-          
-          // ==========================================
-          // 1. 渲染精選車款 (最新前 3 筆)
-          // ==========================================
-          if (productsContainer) {
-            if (!data || !data.bikes || data.bikes.length === 0) {
-              productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">🚲 目前尚無車款資料。</div>';
-            } else {
-              productsContainer.innerHTML = "";
-              // 取最新新增的前 3 筆車款
-              const recentBikes = data.bikes.slice().reverse().slice(0, 3);
-              
-              recentBikes.forEach(item => {
-                const imgUrl = item.imageUrl || 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600';
-                const cardHTML = `
-                  <article class="card">
-                    <div class="card-img-wrapper">
-                      <img src="${imgUrl}" alt="${item.name || '精選車款'}">
-                    </div>
-                    <div class="card-body">
-                      <span class="tag">${item.category || '精選車款'}</span>
-                      <h3 class="card-title">${item.name || ''}</h3>
-                      ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
-                      <p class="card-desc">${item.specs || ''}</p>
-                      <a href="contact.html" class="btn-detail">🔴 預約門市試乘</a>
-                    </div>
-                  </article>
-                `;
-                productsContainer.insertAdjacentHTML("beforeend", cardHTML);
-              });
-            }
+          console.log("首頁收到後端資料:", data);
+
+          // 1. 渲染最新消息
+          const newsList = data.news || [];
+          if (newsList.length === 0) {
+            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告消息。</div>';
+          } else {
+            newsContainer.innerHTML = newsList.map(item => `
+              <article class="news-card">
+                <div class="news-header">
+                  <span class="news-tag">${item.category || '公告'}</span>
+                  <span class="news-date">${item.date || ''}</span>
+                </div>
+                <h3 class="news-title">${item.title || '最新消息'}</h3>
+                <p class="news-content">${item.content || ''}</p>
+              </article>
+            `).join('');
           }
 
-          // ==========================================
-          // 2. 渲染最新消息 (最新前 3 筆)
-          // ==========================================
-          if (newsContainer) {
-            if (!data || !data.news || data.news.length === 0) {
-              newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無公告。</div>';
-            } else {
-              newsContainer.innerHTML = "";
-              const recentNews = data.news.slice().reverse().slice(0, 3);
-              
-              recentNews.forEach(item => {
-                const html = `
-                  <article class="news-card-sm">
-                    <div>
-                      <span class="badge">${item.category || "公告"}</span>
-                      <span class="date">📅 ${item.date || ""}</span>
-                    </div>
-                    <h3>${item.title || "最新消息"}</h3>
-                    <p>${item.content || ""}</p>
-                  </article>
-                `;
-                newsContainer.insertAdjacentHTML("beforeend", html);
-              });
-            }
+          // 2. 渲染精選車款 (只顯示前 3-6 筆)
+          const bikeList = data.bikes || data.products || [];
+          if (bikeList.length === 0) {
+            bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 1.5rem;">目前尚無精選車款資料。</div>';
+          } else {
+            const featuredList = bikeList.slice(0, 6); // 取前 6 筆顯示在首頁
+            bikesContainer.innerHTML = featuredList.map(item => {
+              const defaultImg = "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600";
+              const imgUrl = item.imageUrl && item.imageUrl.trim() !== "" ? item.imageUrl : defaultImg;
+
+              return `
+                <article class="card">
+                  <div class="card-img-wrapper">
+                    <img src="${imgUrl}" alt="${item.name || '車款圖片'}" onerror="this.src='${defaultImg}'" style="width:100%; height:200px; object-fit:cover;">
+                  </div>
+                  <div class="card-body" style="padding: 1rem;">
+                    <span class="tag" style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:4px; font-size:0.85rem;">${item.category || '精選車款'}</span>
+                    <h3 class="card-title" style="margin: 0.5rem 0; font-size:1.2rem;">${item.name || '車款名稱'}</h3>
+                    ${item.price ? `<p class="card-price">${item.price}</p>` : ''}
+                    <p class="card-desc" style="color:#64748b; font-size:0.9rem;">${item.specs || ''}</p>
+                    <a href="contact.html" class="btn-detail" style="display:inline-block; margin-top:0.5rem; color:#dc2626; text-decoration:none; font-weight:bold;">🔴 預約門市試乘</a>
+                  </div>
+                </article>
+              `;
+            }).join('');
           }
 
         })
         .catch(err => {
-          console.error("GAS 資料讀取失敗:", err);
-          if (productsContainer) {
-            productsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款資料載入失敗。</div>';
-          }
-          if (newsContainer) {
-            newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">最新消息載入失敗。</div>';
-          }
+          console.error("首頁資料載入失敗:", err);
+          newsContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">公告載入失敗。</div>';
+          bikesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #dc2626; padding: 1.5rem;">車款載入失敗。</div>';
         });
-
     });
   </script>
 </body>
